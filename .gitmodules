@@ -1,0 +1,3 @@
+[submodule "server-app/lib/HoneyBadgerBFT-Python"]
+	path = server-app/lib/HoneyBadgerBFT-Python
+	url = https://github.com/initc3/HoneyBadgerBFT-Python.git
