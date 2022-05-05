@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package user_service;
+
+
+// The request message for GetBalanceCall
+message GetBalanceRequest {
+  uint64 account_id = 1;
+  string user_name  = 2;
+}
+
+// The response message for GetBalanceCall
+message GetBalanceResponse {
+  uint64 account_id   = 1;
+  uint64 timestamp_ms = 2;
+  double balance      = 3;
+}
+
+// The request message for PayToCall
+message PayToRequest {
+  uint64 src_account_id = 1;
+  string src_user_name  = 2;
+  uint64 des_account_id = 3;
+  string des_user_name  = 4;
+  double amount         = 5;
+}
+
+
+// The UserService definitions
+service UserService {
+  rpc GetBalanceCall (GetBalanceRequest) returns (GetBalanceResponse) {}
+  rpc PayToCall (PayToRequest) returns (GetBalanceResponse) {}
+}
