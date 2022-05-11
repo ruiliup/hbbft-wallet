@@ -1,0 +1,7 @@
+syntax = "proto3";
+import "user_service.proto";
+import "google/protobuf/empty.proto";
+
+service HBBFTService {
+  rpc GetTransactions (google.protobuf.Empty) returns (stream  user_service.PayToRequest);
+}

@@ -25,8 +25,8 @@ message PayToRequest {
   uint64 des_account_id = 3;
   string des_user_name  = 4;
   double amount         = 5;
+  float timestamp       = 6;
 }
-
 
 // The UserService definitions
 service UserService {
