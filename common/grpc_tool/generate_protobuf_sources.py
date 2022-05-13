@@ -5,6 +5,7 @@ import re
 import fnmatch
 import pkg_resources
 
+# Test necessary dependencies
 try:
     from grpc_tools import protoc
 except ImportError:
@@ -12,7 +13,6 @@ except ImportError:
         "grpc_tools must been installed before calling this generate script"
         "Use python3 -m pip install grpcio-tools to insall this package"
     )
-
 
 def get_parent_dir(child_dir, recursion_lvl=1):
     if recursion_lvl == 1:
