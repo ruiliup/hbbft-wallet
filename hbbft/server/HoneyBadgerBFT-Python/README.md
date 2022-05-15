@@ -28,7 +28,7 @@ At the moment, the following three milestones are being focused on:
 * [Test Network](https://github.com/initc3/HoneyBadgerBFT-Python/milestone/2<Paste>)
 * [Release 1.0](https://github.com/initc3/HoneyBadgerBFT-Python/milestone/1)
 
-A roadmap of the project can be found in [ROADMAP.rst](ROADMAP.rst).
+A roadmap of the project can be found in [ROADMAP.rst](./ROADMAP.rst).
 
 
 ### Contributing

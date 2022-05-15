@@ -4,12 +4,12 @@ from enum import Enum
 import gevent
 from gevent.queue import Queue
 
-from commoncoin import shared_coin
-from binaryagreement import binaryagreement
-from reliablebroadcast import reliablebroadcast
-from commonsubset import commonsubset
-from honeybadger_block import honeybadger_block
-from ..exceptions import UnknownTagError
+from honeybadgerbft.core.commoncoin import shared_coin
+from honeybadgerbft.core.binaryagreement import binaryagreement
+from honeybadgerbft.core.reliablebroadcast import reliablebroadcast
+from honeybadgerbft.core.commonsubset import commonsubset
+from honeybadgerbft.core.honeybadger_block import honeybadger_block
+from honeybadgerbft.exceptions import UnknownTagError
 
 
 class BroadcastTag(Enum):
