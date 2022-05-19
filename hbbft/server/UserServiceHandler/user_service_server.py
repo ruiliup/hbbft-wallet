@@ -1,8 +1,8 @@
 from concurrent import futures
 import grpc
 from queue import Queue
-from hbbft.common.grpc_tool.generated import user_service_pb2, user_service_pb2_grpc
-from hbbft.common.grpc_tool.generated import hbbft_service_pb2, hbbft_service_pb2_grpc
+from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
+from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc
 
 database = Queue()
 
@@ -48,6 +48,3 @@ class UserServiceServer(object):
         server.start()
         print("Service started")
         server.wait_for_termination()
-
-
-

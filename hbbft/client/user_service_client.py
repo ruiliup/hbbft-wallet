@@ -6,7 +6,7 @@ import grpc
 import time
 from random import randint, choice, choices
 from string import ascii_letters
-from hbbft.common.grpc_tool.generated import user_service_pb2, user_service_pb2_grpc
+from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
 
 
 class UserServiceClient(object):

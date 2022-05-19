@@ -1,7 +1,10 @@
 syntax = "proto3";
-import "user_service.proto";
+import "hbbft/common/protos/user_service.proto";
 import "google/protobuf/empty.proto";
 
+package grpc_service;
+
+
 service HBBFTService {
-  rpc GetTransactions (google.protobuf.Empty) returns (stream  user_service.PayToRequest);
+  rpc GetTransactions (google.protobuf.Empty) returns (stream  grpc_service.PayToRequest);
 }

@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     name='hbbft',
-    version='',
-    packages=['hbbft', 'hbbft.client', 'hbbft.common', 'hbbft.common.grpc_tool', 'hbbft.common.grpc_tool.test',
-              'hbbft.common.grpc_tool.generated', 'hbbft.server', 'hbbft.server.UserServiceHandler',
+    version='0.1',
+    packages=['hbbft', 'hbbft.client', 'hbbft.common', 'hbbft.common.protos',
+              'hbbft.server', 'hbbft.server.UserServiceHandler',
               'hbbft.server.HoneyBadgerBFT-Python', 'hbbft.server.HoneyBadgerBFT-Python.docs',
               'hbbft.server.HoneyBadgerBFT-Python.misc', 'hbbft.server.HoneyBadgerBFT-Python.misc.shoup_tsig',
               'hbbft.server.HoneyBadgerBFT-Python.test', 'hbbft.server.HoneyBadgerBFT-Python.test.crypto',

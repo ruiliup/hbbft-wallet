@@ -81,6 +81,15 @@ class HoneyBadgerBFT():
         self.transaction_buffer = []
         self._per_round_recv = {}  # Buffer of incoming messages
 
+    def get_txn(self):
+        with grpc.insecure_channel(f'localhost:{user_service_port}') as channel:
+            # fetch this txn from grpc to hbbft.
+            stub2 = hbbft_service_pb2_grpc.HBBFTServiceStub(channel)
+            request = hbbft_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+            txns = stub2.GetTransactions(request)
+            for txn in txns:
+                self.submit_tx(txn)
+
     def submit_tx(self, tx):
         """Appends the given transaction to the transaction buffer.
 
