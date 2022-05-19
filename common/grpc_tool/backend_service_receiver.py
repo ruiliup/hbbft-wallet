@@ -96,15 +96,8 @@ class BackendServiceReceiver(threading.Thread):
             self.outer_self = outer_self
 
         def BroadcastCall(self, request, context):
-            print(f"Node: {self.outer_self.node_id} received a BroadcastCall")
-            # # Decode the message and push it to honeybadger core queue
-            # sender = request.src_node_id
-            # dest = request.dest_id
-            # rd = request.round_id
-            # msg_header = request.header
-            # msg_payload = request.payload
-
-            # decoded_msg = (sender, (rd, dest, msg_header, msg_payload))
+            print(f"Node: {self.outer_self.node_id} received a BroadcastCall from node {request.src_node_id}")
+            # Decode the message and push it to honeybadger core queue
             if self.outer_self.receiver_queue != None:
                 self.outer_self.receiver_queue.put(request)
             return hbbft_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()

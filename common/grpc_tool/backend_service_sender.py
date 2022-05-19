@@ -68,12 +68,13 @@ class BackendServiceSender(threading.Thread):
         if self.sender_queue == None:
             print("BackendServiceSender: sender queue unavailble. Exiting")
             return
-        
+
         empty_exception = None
         # gevent.queue.Queue class has no __module__ attribute
         # so we need to test the type of sender queue differently here
-        if 'gevent' in str(type(self.sender_queue)):
+        if "gevent" in str(type(self.sender_queue)):
             from gevent.queue import Empty
+
             empty_exception = Empty
         else:
             empty_exception = inspect.getmodule(self.sender_queue).Empty
@@ -84,7 +85,7 @@ class BackendServiceSender(threading.Thread):
                 # Use timeout here to make the thread interruptable with KeyboardInterrupt
                 # msg_to_send has format (dest, (round_id, dest, header, msg))
                 (dest_node_id, broadcast_msg) = self.sender_queue.get_nowait()
-
+                print(f"Node: {self.node_id} calling a BroadcastCall to node {dest_node_id}")
                 # Lookup the destination IP address
                 if dest_node_id in node_ip_lut:
                     dest_ip = node_ip_lut[dest_node_id]["ip_addr"]
@@ -92,17 +93,12 @@ class BackendServiceSender(threading.Thread):
                     with grpc.insecure_channel(f"{dest_ip}:{dest_port}") as channel:
                         stub = hbbft_service_pb2_grpc.BackendServiceStub(channel)
                         # Send request over gRPC
-                        stub.BroadcastCall(
-                            broadcast_msg
-                            # hbbft_service_pb2.BroadcastMessage(
-                            #     src_node_id=self.node_id, dest_id=msg_dest, round_id=round_id, header=msg_header, payload=msg_payload
-                            # )
-                        )
+                        stub.BroadcastCall(broadcast_msg)
                 else:
                     print(
                         f"Node {self.node_id}: Unable to find the IP address of dest_node_id={dest_node_id}"
                     )
             except empty_exception:
-                #Handle empty queue exception here
+                # Handle empty queue exception here
                 pass
             time.sleep(0)

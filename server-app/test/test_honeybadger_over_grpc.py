@@ -2,7 +2,9 @@ from collections import defaultdict
 
 import os
 import sys
-from gevent import monkey; monkey.patch_all(thread=False)
+from gevent import monkey
+
+monkey.patch_all(thread=False)
 
 # Locate the grpc_tool source files
 this_dir = os.path.dirname(os.path.realpath(__file__))
@@ -30,13 +32,15 @@ try:
 
     # reload(honeybadgerbft.core.honeybadger)
     from honeybadgerbft.core.honeybadger import HoneyBadgerBFT
-    from honeybadgerbft.crypto.threshsig.boldyreva import dealer, serialize, deserialize1
+    from honeybadgerbft.crypto.threshsig.boldyreva import (
+        dealer,
+        serialize,
+        deserialize1,
+    )
     from honeybadgerbft.crypto.threshenc import tpke
     from honeybadgerbft.core.honeybadger import BroadcastTag
 except ImportError:
-    raise Exception(
-        "Failed to import the HoneyBadgerBFT lib objects"
-    )
+    raise Exception("Failed to import the HoneyBadgerBFT lib objects")
 
 
 import gevent
@@ -81,12 +85,12 @@ def grpc_router(N):
     grpc_sender_classes = [BackendServiceSender(node_id) for node_id in range(N)]
     grpc_sender_queues = [Queue() for _ in range(N)]
 
-
     def makeSend(i):
         print(f"Setting up grpc sender for node {i}")
         # Register the sender queue of each node and start the services
         grpc_sender_classes[i].register_sender_queue(grpc_sender_queues[i])
         grpc_sender_classes[i].start()
+
         def _send(j, o):
             # serialize message
             round_id = o[0]
@@ -95,27 +99,26 @@ def grpc_router(N):
             op_type = op_msg[0]
             op_id = op_msg[1]
             op_payload = op_msg[2]
-            bcast_msg = hbbft_service_pb2.BroadcastMessage(src_node_id=i, msg_id=op_id, round_id=round_id, op_type=op_type)
-            if 'ACS_COIN' == op_type:
+            bcast_msg = hbbft_service_pb2.BroadcastMessage(
+                src_node_id=i, msg_id=op_id, round_id=round_id, op_type=op_type
+            )
+            if "ACS_COIN" == op_type:
                 bcast_msg.cc_op.tag = op_payload[0]
                 bcast_msg.cc_op.round = op_payload[1]
                 bcast_msg.cc_op.ser_sig = serialize(op_payload[2])
-            elif 'TPKE' == op_type:
-                print('TPKE message send')
-                print(op_payload)
+            elif "TPKE" == op_type:
                 for share in op_payload:
-                    bcast_msg.te_op.ser_shares.append(serialize(share))
-            elif 'ACS_RBC' == op_type:
+                    bcast_msg.te_op.ser_shares.append(tpke.serialize(share))
+            elif "ACS_RBC" == op_type:
                 bcast_msg.rb_op.payload = pickle.dumps(op_payload)
-            elif 'ACS_ABA' == op_type:
+            elif "ACS_ABA" == op_type:
                 bcast_msg.ba_op.payload = pickle.dumps(op_payload)
             else:
-                print(f'Unknown message type {o}')
+                print(f"Unknown message type {o}")
 
             # Push the message (j, o) to the gRPC sender queue of node i
             grpc_sender_queues[i].put((j, bcast_msg))
-            print(f"Send round {round_id}: [{i} -> {j}]")
-
+            # print(f"Send round {round_id}: [{i} -> {j}]")
 
         return _send
 
@@ -126,7 +129,6 @@ def grpc_router(N):
         grpc_receiver_classes[j].start()
 
         def _recv():
-            # print(f"Node {j} receiving")
             # Get the message (src_id, o) from the gRPC receiver queue of node j
             while True:
                 try:
@@ -135,31 +137,33 @@ def grpc_router(N):
                     round_id = bcast_msg.round_id
                     op_type = bcast_msg.op_type
                     msg_id = bcast_msg.msg_id
-                    op_msg = getattr(bcast_msg, bcast_msg.WhichOneof('operation'))
+                    op_msg = getattr(bcast_msg, bcast_msg.WhichOneof("operation"))
 
                     # Deserialize message payload
                     des_op_msg = None
-                    if 'ACS_COIN' == op_type:
-                        des_op_msg = (op_msg.tag, op_msg.round, deserialize1(op_msg.ser_sig))
-                    elif 'TPKE' == op_type:
-                        print('TPKE message recv')
+                    if "ACS_COIN" == op_type:
+                        des_op_msg = (
+                            op_msg.tag,
+                            op_msg.round,
+                            deserialize1(op_msg.ser_sig),
+                        )
+                    elif "TPKE" == op_type:
+                        # print('TPKE message recv')
                         des_op_msg = []
                         for share in op_msg.ser_shares:
-                            des_op_msg.append(deserialize1(share))
-                    elif 'ACS_RBC' == op_type:
+                            des_op_msg.append(tpke.deserialize1(share))
+                    elif "ACS_RBC" == op_type:
                         des_op_msg = pickle.loads(op_msg.payload)
-                    elif 'ACS_ABA' == op_type:
+                    elif "ACS_ABA" == op_type:
                         des_op_msg = pickle.loads(op_msg.payload)
                     else:
-                        print(f'Unknown message type {o}')
-                    
+                        print(f"Unknown message type {o}")
+
                     # message o has format (round_id, ('Header', dest_id, payload))
                     o = (round_id, (op_type, msg_id, des_op_msg))
-                    print(f"Recv round {o[0]}: [{src_id} -> {j}]")
-                    print(o)
+                    # print(f"Recv round {o[0]}: [{src_id} -> {j}]")
                     return (src_id, o)
                 except Empty:
-                    # print(f"Node {j} receiving timeout")
                     time.sleep(0)
 
         return _recv
