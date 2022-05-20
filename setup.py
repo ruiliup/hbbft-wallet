@@ -4,7 +4,7 @@ setup(
     name='hbbft',
     version='0.1',
     packages=['hbbft', 'hbbft.client', 'hbbft.common', 'hbbft.common.protos',
-              'hbbft.server', 'hbbft.server.UserServiceHandler',
+              'hbbft.server', 'hbbft.server.UserServiceHandler', 'hbbft.server.BackendServiceHandler',
               'hbbft.server.HoneyBadgerBFT-Python', 'hbbft.server.HoneyBadgerBFT-Python.docs',
               'hbbft.server.HoneyBadgerBFT-Python.misc', 'hbbft.server.HoneyBadgerBFT-Python.misc.shoup_tsig',
               'hbbft.server.HoneyBadgerBFT-Python.test', 'hbbft.server.HoneyBadgerBFT-Python.test.crypto',
