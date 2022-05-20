@@ -12,7 +12,7 @@ docker run -v local/path/to/code:container/path/to/code -it [image-name] /bin/ba
 ```
 
 Steps to install hbbft.
-1. under root, run `pip requirements.txt`.
+1. under root, run `pip install -r requirements.txt`.
 2. in grpc_tool, run `python generate_protobuf_sources.py`.
 3. under root, run `python setup.py install`.
 4. go to hbbft-wallet/hbbft/server/HoneyBadgerBFT-Python, run `python setup.py install`.
