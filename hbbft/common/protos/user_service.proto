@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package grpc_service;
+
+//Account
+message Account {
+  uint64 account_id = 1;
+  string user_name  = 2;
+  double balance    = 3;
+}
+
+// The request message for GetBalanceCall
+message GetBalanceRequest {
+  uint64 account_id = 1;
+}
+
+// The response message for GetBalanceCall
+message GetBalanceResponse {
+  Account account = 1;
+}
+
+// The request message for PayToCall
+message PayToRequest {
+  Account src_acct = 1;
+  Account des_acct = 2;
+  double amount    = 3;
+  float timestamp  = 4;
+}
+
+//Transaction result
+message PayToResponse {
+  bool status = 1;
+}
+
+// The UserService definitions
+service UserService {
+  rpc GetBalanceCall (GetBalanceRequest) returns (GetBalanceResponse) {}
+  rpc PayToCall (PayToRequest) returns (PayToResponse) {}
+}

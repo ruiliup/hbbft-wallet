@@ -1,0 +1,54 @@
+syntax = "proto3";
+import "hbbft/common/protos/user_service.proto";
+import "google/protobuf/empty.proto";
+
+package grpc_service;
+
+message CommonCoinOperation
+{
+    string tag      = 1;
+    uint64 round    = 2;
+    bytes ser_sig   = 3;
+}
+
+message BinaryAgreementOperation
+{
+    bytes payload   = 1;
+}
+
+message ReliableBroadcastOperation
+{
+    bytes payload   = 1;
+}
+
+message ThresholdEncryptionOperation
+{
+    repeated bytes ser_shares = 1;
+}
+
+// The broadcast message for the HBBFT backend communication
+message BroadcastMessage
+{
+    uint64 src_node_id  = 1;
+    uint64 msg_id       = 2;
+    uint64 round_id     = 3;
+    string op_type      = 4;
+    oneof operation
+    {
+        CommonCoinOperation cc_op           = 5;
+        BinaryAgreementOperation ba_op      = 6;
+        ReliableBroadcastOperation rb_op    = 7;
+        ThresholdEncryptionOperation te_op  = 8;
+    }
+}
+
+
+// The BackendService definitions
+service BackendService {
+  rpc BroadcastCall (BroadcastMessage) returns (google.protobuf.Empty) {}
+}
+
+
+service HBBFTService {
+  rpc GetTransactions (google.protobuf.Empty) returns (stream  grpc_service.PayToRequest);
+}

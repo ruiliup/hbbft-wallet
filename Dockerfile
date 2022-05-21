@@ -27,5 +27,7 @@ WORKDIR $SRC
 ADD . $SRC/
 
 RUN pip install --upgrade pip
-RUN pip install -e server-app/lib/HoneyBadgerBFT-Python[dev]
-RUN pip install grpcio-tools
+RUN pip install -r requirements.txt
+RUN python grpc_tool/generate_protobuf_sources.py
+RUN pip install -e .
+RUN pip install -e hbbft/server/HoneyBadgerBFT-Python[dev]
