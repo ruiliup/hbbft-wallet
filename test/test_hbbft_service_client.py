@@ -1,5 +1,4 @@
 from hbbft.common.setting import user_service_port, total_server, fault_server, server_id, batch_size
-from hbbft.client.user_service_client import UserServiceClient
 from honeybadgerbft.core.honeybadger import HoneyBadgerBFT
 from honeybadgerbft.crypto.threshenc import tpke
 from honeybadgerbft.crypto.threshsig.boldyreva import dealer

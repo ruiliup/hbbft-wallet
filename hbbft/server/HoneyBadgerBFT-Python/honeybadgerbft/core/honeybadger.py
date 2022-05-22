@@ -4,6 +4,7 @@ from enum import Enum
 import gevent
 from gevent.queue import Queue
 import grpc
+import pickle
 from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc
 
 from honeybadgerbft.core.commoncoin import shared_coin
@@ -92,7 +93,9 @@ class HoneyBadgerBFT():
             txns = stub2.GetTransactions(request)
             for txn in txns:
                 print('Get_tx', txn)
-                self.submit_tx(txn)
+                txn_s = pickle.dumps(txn)
+                print('Changed to txn_s', txn_s)
+                self.submit_tx(txn_s)
 
     def submit_tx(self, tx):
         """Appends the given transaction to the transaction buffer.
