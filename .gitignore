@@ -1,1 +1,4 @@
 *generated
+build
+dist
+*.egg-info

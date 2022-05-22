@@ -3,6 +3,9 @@ from enum import Enum
 
 import gevent
 from gevent.queue import Queue
+import grpc
+import pickle
+from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc
 
 from honeybadgerbft.core.commoncoin import shared_coin
 from honeybadgerbft.core.binaryagreement import binaryagreement
@@ -81,21 +84,25 @@ class HoneyBadgerBFT():
         self.transaction_buffer = []
         self._per_round_recv = {}  # Buffer of incoming messages
 
-    def get_txn(self):
+    def get_txn(self, user_service_port):
+        # test get transactions from grpc.
         with grpc.insecure_channel(f'localhost:{user_service_port}') as channel:
             # fetch this txn from grpc to hbbft.
             stub2 = hbbft_service_pb2_grpc.HBBFTServiceStub(channel)
             request = hbbft_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             txns = stub2.GetTransactions(request)
             for txn in txns:
-                self.submit_tx(txn)
+                print('Get_tx', txn)
+                txn_s = pickle.dumps(txn)
+                print('Changed to txn_s', txn_s)
+                self.submit_tx(txn_s)
 
     def submit_tx(self, tx):
         """Appends the given transaction to the transaction buffer.
 
         :param tx: Transaction to append to the buffer.
         """
-        print('submit_tx', self.pid, tx)
+        print('submit_tx', self.pid, tx, '\n')
         self.transaction_buffer.append(tx)
 
     def run(self):
