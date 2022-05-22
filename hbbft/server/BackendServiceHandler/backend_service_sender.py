@@ -71,7 +71,7 @@ class BackendServiceSender(threading.Thread):
                 # Use timeout here to make the thread interruptable with KeyboardInterrupt
                 # msg_to_send has format (dest, (round_id, dest, header, msg))
                 (dest_node_id, broadcast_msg) = self.sender_queue.get_nowait()
-                print(f"Node: {self.node_id} calling a BroadcastCall to node {dest_node_id}")
+                # print(f"Node: {self.node_id} calling a BroadcastCall to node {dest_node_id}")
                 # Lookup the destination IP address
                 if dest_node_id in node_ip_lut:
                     dest_ip = node_ip_lut[dest_node_id]["ip_addr"]

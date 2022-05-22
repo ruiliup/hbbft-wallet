@@ -102,7 +102,7 @@ class HoneyBadgerBFT():
 
         :param tx: Transaction to append to the buffer.
         """
-        print('submit_tx', self.pid, tx, '\n')
+        print('submit_tx', self.pid, tx, '\n', flush=True)
         self.transaction_buffer.append(tx)
 
     def run(self):
@@ -140,6 +140,7 @@ class HoneyBadgerBFT():
             tx_to_send = self.transaction_buffer[:self.B]
 
             # TODO: Wait a bit if transaction buffer is not full
+            self.get_txn()
 
             # Run the round
             def _make_send(r):
@@ -148,15 +149,18 @@ class HoneyBadgerBFT():
                 return _send
             send_r = _make_send(r)
             recv_r = self._per_round_recv[r].get
-            new_tx = self._run_round(r, tx_to_send[0], send_r, recv_r)
-            print('new_tx:', new_tx)
+            tx = ""
+            if len(tx_to_send) > 0:
+                tx = tx_to_send[0]
+            new_tx = self._run_round(r, tx, send_r, recv_r)
+            print('new_tx:', new_tx, flush=True)
 
             # Remove all of the new transactions from the buffer
-            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if _tx not in new_tx]
+            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if bytearray(_tx, encoding="utf-8") not in new_tx]
 
             self.round += 1     # Increment the round
-            if self.round >= 3:
-                break   # Only run one round for now
+            # if self.round >= 3:
+            #     break   # Only run one round for now
 
     def _run_round(self, r, tx_to_send, send, recv):
         """Run one protocol round.

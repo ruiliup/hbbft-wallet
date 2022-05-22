@@ -20,7 +20,9 @@ def main():
     parser.add_argument('k', help='k')
     args = parser.parse_args()
     keys = _generate_keys(int(args.players), args.k)
-    print(pickle.dumps(keys))
+    with open('/usr/local/src/hbbft-wallet/thencN_t.keys', 'wb') as handle:
+        pickle.dump(keys, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    # print(pickle.dumps(keys))
 
 
 if __name__ == '__main__':
