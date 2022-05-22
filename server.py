@@ -196,12 +196,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # run user_service_server thread
-    def run_user_service_server(run_user_service_server):
-        sev = UserServiceServer()
-        sev.run()
+    # def run_user_service_server():
+    #     sev = UserServiceServer()
+    #     sev.run()
 
-    user_service_thread = threading.Thread(target=run_user_service_server)
-    user_service_thread.start()
+    # user_service_thread = threading.Thread(target=run_user_service_server)
+    # user_service_thread.start()
 
     # initiate honeybadgerBFT
     sid = "sidA"
@@ -228,9 +228,9 @@ if __name__ == "__main__":
     thread = gevent.spawn(badger.run)
 
     try:
-        user_service_thread.join()
+        # user_service_thread.join()
         gevent.joinall([thread])
     except KeyboardInterrupt:
-        user_service_thread.kill()
+        # user_service_thread.kill()
         gevent.killall([thread])
         raise

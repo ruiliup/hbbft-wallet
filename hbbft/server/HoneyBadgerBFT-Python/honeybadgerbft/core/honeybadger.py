@@ -140,7 +140,7 @@ class HoneyBadgerBFT():
             tx_to_send = self.transaction_buffer[:self.B]
 
             # TODO: Wait a bit if transaction buffer is not full
-            self.get_txn()
+            # self.get_txn()
 
             # Run the round
             def _make_send(r):
