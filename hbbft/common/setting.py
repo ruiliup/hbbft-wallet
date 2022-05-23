@@ -10,3 +10,4 @@ total_server = 4
 fault_server = 1
 server_id = 1
 batch_size = 1
+block_path = f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{server_id}'

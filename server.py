@@ -9,7 +9,7 @@ monkey.patch_all(thread=False)
 from hbbft.server.BackendServiceHandler.backend_service_receiver import BackendServiceReceiver
 from hbbft.server.BackendServiceHandler.backend_service_sender import BackendServiceSender
 from hbbft.common.protos import hbbft_service_pb2
-
+from hbbft.common.setting import block_path
 
 import honeybadgerbft.core.honeybadger
 
@@ -208,7 +208,7 @@ if __name__ == "__main__":
     send, recv = router(pid)
 
     badger = HoneyBadgerBFT(
-        sid, pid, 1, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv
+        sid, pid, 1, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv, block_path
     )
     time.sleep(5)
 

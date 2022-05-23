@@ -1,4 +1,5 @@
-from hbbft.common.setting import user_service_port, total_server, fault_server, server_id, batch_size
+from hbbft.common.setting import user_service_port, total_server, fault_server, server_id, batch_size, block_path
+from hbbft.client.user_service_client import UserServiceClient
 from honeybadgerbft.core.honeybadger import HoneyBadgerBFT
 from honeybadgerbft.crypto.threshenc import tpke
 from honeybadgerbft.crypto.threshsig.boldyreva import dealer
@@ -40,6 +41,9 @@ def simple_router(N, maxdelay=0.005, seed=None):
 
 
 if __name__ == "__main__":
+    client = UserServiceClient(ip="localhost", num=2)
+    client.create_txns(2)
+    client.close()
     sid = 'sidA'
     N = total_server
     f = fault_server
@@ -52,5 +56,5 @@ if __name__ == "__main__":
     ePK, eSKs = tpke.dealer(N, f+1)
     hbbft = HoneyBadgerBFT(sid, server_id, batch_size, N, f,
                            sPK, sSKs[server_id-1], ePK, eSKs[server_id-1],
-                           sends[server_id-1], recvs[server_id-1])
+                           sends[server_id-1], recvs[server_id-1], block_path)
     hbbft.get_txn(user_service_port)
