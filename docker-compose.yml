@@ -12,7 +12,7 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.238.2
-    command: python server.py 4 1 0 thsigN_t.keys thencN_t.keys
+    command: ./run.sh 4 1 0
   h2:
     # build:
     #   context: .
@@ -24,7 +24,7 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.238.3
-    command: python server.py 4 1 1 thsigN_t.keys thencN_t.keys
+    command: ./run.sh 4 1 1
   h3:
     # build:
     #   context: .
@@ -36,7 +36,7 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.238.4
-    command: python server.py 4 1 2 thsigN_t.keys thencN_t.keys
+    command: ./run.sh 4 1 2
   h4:
     # build:
     #   context: .
@@ -48,7 +48,7 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.238.5
-    command: python server.py 4 1 3 thsigN_t.keys thencN_t.keys
+    command: ./run.sh 4 1 3
   client:
     container_name: hbbft_cl
     image:
@@ -58,6 +58,7 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.238.6
+    command: python test/test_user_service_client.py
 networks:
   app_net:
     driver: bridge

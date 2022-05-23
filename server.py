@@ -8,7 +8,6 @@ monkey.patch_all(thread=False)
 
 from hbbft.server.BackendServiceHandler.backend_service_receiver import BackendServiceReceiver
 from hbbft.server.BackendServiceHandler.backend_service_sender import BackendServiceSender
-from hbbft.server.UserServiceHandler.user_service_server import UserServiceServer
 from hbbft.common.protos import hbbft_service_pb2
 
 
@@ -195,14 +194,6 @@ if __name__ == "__main__":
     parser.add_argument("threshold_enc_keys", help="location of threshold encryption keys")
     args = parser.parse_args()
 
-    # run user_service_server thread
-    # def run_user_service_server():
-    #     sev = UserServiceServer()
-    #     sev.run()
-
-    # user_service_thread = threading.Thread(target=run_user_service_server)
-    # user_service_thread.start()
-
     # initiate honeybadgerBFT
     sid = "sidA"
     N = int(args.N)
@@ -228,9 +219,7 @@ if __name__ == "__main__":
     thread = gevent.spawn(badger.run)
 
     try:
-        # user_service_thread.join()
         gevent.joinall([thread])
     except KeyboardInterrupt:
-        # user_service_thread.kill()
         gevent.killall([thread])
         raise

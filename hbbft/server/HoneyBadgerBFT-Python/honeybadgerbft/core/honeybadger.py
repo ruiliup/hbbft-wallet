@@ -5,7 +5,8 @@ import gevent
 from gevent.queue import Queue
 import grpc
 import pickle
-from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc
+from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc, user_service_pb2
+from hbbft.common.setting import user_service_port
 
 from honeybadgerbft.core.commoncoin import shared_coin
 from honeybadgerbft.core.binaryagreement import binaryagreement
@@ -14,6 +15,7 @@ from honeybadgerbft.core.commonsubset import commonsubset
 from honeybadgerbft.core.honeybadger_block import honeybadger_block
 from honeybadgerbft.exceptions import UnknownTagError
 
+from google.protobuf.json_format import MessageToJson, Parse
 
 class BroadcastTag(Enum):
     ACS_COIN = 'ACS_COIN'
@@ -92,9 +94,9 @@ class HoneyBadgerBFT():
             request = hbbft_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             txns = stub2.GetTransactions(request)
             for txn in txns:
-                print('Get_tx', txn)
-                txn_s = pickle.dumps(txn)
-                print('Changed to txn_s', txn_s)
+                # print('Get_tx', txn, flush=True)
+                txn_s = MessageToJson(txn, indent=False).replace('\n', '')
+                # print('Changed to txn_s', txn_s, flush=True)
                 self.submit_tx(txn_s)
 
     def submit_tx(self, tx):
@@ -140,7 +142,7 @@ class HoneyBadgerBFT():
             tx_to_send = self.transaction_buffer[:self.B]
 
             # TODO: Wait a bit if transaction buffer is not full
-            # self.get_txn()
+            self.get_txn(user_service_port)
 
             # Run the round
             def _make_send(r):
