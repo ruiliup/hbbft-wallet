@@ -9,7 +9,7 @@ monkey.patch_all(thread=False)
 from hbbft.server.BackendServiceHandler.backend_service_receiver import BackendServiceReceiver
 from hbbft.server.BackendServiceHandler.backend_service_sender import BackendServiceSender
 from hbbft.common.protos import hbbft_service_pb2
-from hbbft.common.setting import block_path
+from hbbft.common.setting import block_path, server_id
 
 import honeybadgerbft.core.honeybadger
 
@@ -26,6 +26,7 @@ import time
 import threading
 import pickle
 import argparse
+import shutil
 
 
 def read_keys():
@@ -200,6 +201,9 @@ if __name__ == "__main__":
     f = int(args.f)
     B = 1
     pid = int(args.pid)
+
+    # start a clean folder for blocks
+    shutil.rmtree(f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}')
     
     PK, SKs = initiateThresholdSig(open(args.threshold_sig_keys, "rb"))
     encPK, encSKs = initiateThresholdEnc(open(args.threshold_enc_keys, "rb"))
@@ -208,7 +212,7 @@ if __name__ == "__main__":
     send, recv = router(pid)
 
     badger = HoneyBadgerBFT(
-        sid, pid, 1, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv, block_path
+        sid, pid, 1, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv, f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}'
     )
     time.sleep(5)
 

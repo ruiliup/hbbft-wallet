@@ -206,6 +206,11 @@ class HoneyBadgerBFT():
             # Remove all of the new transactions from the buffer
             self.transaction_buffer = [_tx for _tx in self.transaction_buffer if bytearray(_tx, encoding="utf-8") not in new_tx]
 
+            # write transactions to block files
+            for tx in new_tx:
+                if tx:
+                    self.save_block(tx.decode())
+
             self.round += 1     # Increment the round
             # if self.round >= 3:
             #     break   # Only run one round for now
