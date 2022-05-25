@@ -2,10 +2,14 @@ from collections import namedtuple
 from enum import Enum
 
 import gevent
+import os
 from gevent.queue import Queue
 import grpc
-import pickle
-from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc
+import hashlib
+import time
+from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc, user_service_pb2
+from hbbft.common.setting import user_service_port
+from google.protobuf.json_format import MessageToJson, Parse
 
 from honeybadgerbft.core.commoncoin import shared_coin
 from honeybadgerbft.core.binaryagreement import binaryagreement
@@ -14,6 +18,7 @@ from honeybadgerbft.core.commonsubset import commonsubset
 from honeybadgerbft.core.honeybadger_block import honeybadger_block
 from honeybadgerbft.exceptions import UnknownTagError
 
+from google.protobuf.json_format import MessageToJson, Parse
 
 class BroadcastTag(Enum):
     ACS_COIN = 'ACS_COIN'
@@ -67,7 +72,7 @@ class HoneyBadgerBFT():
     :param recv:
     """
 
-    def __init__(self, sid, pid, B, N, f, sPK, sSK, ePK, eSK, send, recv):
+    def __init__(self, sid, pid, B, N, f, sPK, sSK, ePK, eSK, send, recv, block_path):
         self.sid = sid
         self.pid = pid
         self.B = B
@@ -82,6 +87,8 @@ class HoneyBadgerBFT():
 
         self.round = 0  # Current block number
         self.transaction_buffer = []
+        self.block_path = block_path
+        self.block_size = 2
         self._per_round_recv = {}  # Buffer of incoming messages
 
     def get_txn(self, user_service_port):
@@ -92,18 +99,59 @@ class HoneyBadgerBFT():
             request = hbbft_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             txns = stub2.GetTransactions(request)
             for txn in txns:
-                print('Get_tx', txn)
-                txn_s = pickle.dumps(txn)
-                print('Changed to txn_s', txn_s)
+                # print('Get_tx', txn, flush=True)
+                txn_s = MessageToJson(txn, indent=False).replace('\n', '')
+                # print('Changed to txn_s', txn_s, flush=True)
                 self.submit_tx(txn_s)
+            #DELETE For test:
+            #     self.save_block(txn_s)
+            # self.read_block()
 
     def submit_tx(self, tx):
         """Appends the given transaction to the transaction buffer.
 
         :param tx: Transaction to append to the buffer.
         """
-        print('submit_tx', self.pid, tx, '\n')
+        print('submit_tx', self.pid, tx, '\n', flush=True)
         self.transaction_buffer.append(tx)
+
+    def save_block(self, tx):
+        if not os.path.exists(self.block_path):
+            os.makedirs(self.block_path)
+        if os.listdir(self.block_path):
+            last_file = sorted(os.listdir(self.block_path))[-1]
+            f = open(os.path.join(self.block_path, last_file), 'r')
+            if(len(f.readlines()) < self.block_size + 1):  # one line for hash
+                with open(os.path.join(os.path.join(self.block_path, last_file)), 'a') as wf:
+                    # json.dump(tx, wf)
+                    wf.write(tx + '\n')
+                    return
+        else:
+            last_file = None
+
+        timestamp_file = time.time()
+        with open(os.path.join(self.block_path, str(timestamp_file)), 'w') as wf:
+            if last_file:
+                with open(os.path.join(self.block_path, last_file), 'rb') as rf:
+                    bytes = rf.read()
+                    readable_hash = hashlib.sha256(bytes).hexdigest()
+            else:
+                readable_hash = hashlib.sha256(str(timestamp_file).encode('utf-8')).hexdigest()
+            # print("write readable_hash", readable_hash)
+            wf.write(readable_hash + '\n')
+            wf.write(tx + '\n')
+        return
+
+    def read_block(self):
+        for file in os.listdir(self.block_path):
+            with open(os.path.join(self.block_path, file), 'r') as f:
+                #TODO: Check the has matches previous block file's content
+                txns = f.readlines()
+                for tx in txns[1:]:
+                    tx_message = Parse(tx, user_service_pb2.PayToRequest())
+                    # print("read", tx)
+                    # print("After converting", tx_message)
+                    #TODO: Add logic to calculate the balance
 
     def run(self):
         """Run the HoneyBadgerBFT protocol."""
@@ -140,6 +188,7 @@ class HoneyBadgerBFT():
             tx_to_send = self.transaction_buffer[:self.B]
 
             # TODO: Wait a bit if transaction buffer is not full
+            self.get_txn(user_service_port)
 
             # Run the round
             def _make_send(r):
@@ -148,15 +197,23 @@ class HoneyBadgerBFT():
                 return _send
             send_r = _make_send(r)
             recv_r = self._per_round_recv[r].get
-            new_tx = self._run_round(r, tx_to_send[0], send_r, recv_r)
-            print('new_tx:', new_tx)
+            tx = ""
+            if len(tx_to_send) > 0:
+                tx = tx_to_send[0]
+            new_tx = self._run_round(r, tx, send_r, recv_r)
+            print('new_tx:', new_tx, flush=True)
 
             # Remove all of the new transactions from the buffer
-            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if _tx not in new_tx]
+            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if bytearray(_tx, encoding="utf-8") not in new_tx]
+
+            # write transactions to block files
+            for tx in new_tx:
+                if tx:
+                    self.save_block(tx.decode())
 
             self.round += 1     # Increment the round
-            if self.round >= 3:
-                break   # Only run one round for now
+            # if self.round >= 3:
+            #     break   # Only run one round for now
 
     def _run_round(self, r, tx_to_send, send, recv):
         """Run one protocol round.

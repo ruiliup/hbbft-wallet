@@ -83,7 +83,7 @@ class BackendServiceReceiver(threading.Thread):
             self.outer_self = outer_self
 
         def BroadcastCall(self, request, context):
-            print(f"Node: {self.outer_self.node_id} received a BroadcastCall from node {request.src_node_id}")
+            # print(f"Node: {self.outer_self.node_id} received a BroadcastCall from node {request.src_node_id}")
             # Decode the message and push it to honeybadger core queue
             if self.outer_self.receiver_queue != None:
                 self.outer_self.receiver_queue.put(request)

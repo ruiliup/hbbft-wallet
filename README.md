@@ -10,6 +10,10 @@ docker build -t [image-name] .
 ```
 docker run -v local/path/to/code:container/path/to/code -it [image-name] /bin/bash
 ```
+3. To run docker-compose
+```
+docker-compose up
+```
 
 Manual steps to install hbbft.
 1. under root, run `pip install -r requirements.txt`.

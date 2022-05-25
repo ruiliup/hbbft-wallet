@@ -46,5 +46,5 @@ class UserServiceServer(object):
         hbbft_service_pb2_grpc.add_HBBFTServiceServicer_to_server(HBBFTService(), server)
         server.add_insecure_port(f"[::]:{self.port}")
         server.start()
-        print("Service started")
+        print("User Service Server started", flush=True)
         server.wait_for_termination()
