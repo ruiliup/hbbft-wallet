@@ -32,8 +32,14 @@ message PayToResponse {
   bool status = 1;
 }
 
+//Register result
+message RegisterResponse {
+  bool status = 1;
+}
+
 // The UserService definitions
 service UserService {
   rpc GetBalanceCall (GetBalanceRequest) returns (GetBalanceResponse) {}
   rpc PayToCall (PayToRequest) returns (PayToResponse) {}
+  rpc Register (Account) returns (RegisterResponse) {}
 }

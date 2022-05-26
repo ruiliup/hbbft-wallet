@@ -2,6 +2,8 @@
 Honeybadger has recv function to receive transactions from external.
 We implement function here to feed this recv so Honeybadger can process those transactions.
 """
+import datetime
+
 import grpc
 import time
 from random import randint, choice, choices
@@ -29,9 +31,25 @@ class UserServiceClient(object):
             balance = int(1e9)
             self.accts.append(self.create_account(acct_id, name, balance))
 
-    @staticmethod
-    def create_account(account_id: int, name: str, balance: int):
-        return user_service_pb2.Account(account_id=account_id, user_name=name, balance=balance)
+    def create_account(self, account_id: int, name: str, balance: int):
+        response = self.stub.Register(
+            user_service_pb2.Account(account_id=account_id, user_name=name, balance=balance)
+        )
+        status = False
+        if response.status:
+            # call get balance and verify account and balance match.
+            now = datetime.datetime.now()
+            end = now + datetime.timedelta(minutes=10)
+            acct = self.get_balance(account_id)
+            while now <= end and acct.balance == 0:
+                time.sleep(5)
+                acct = self.get_balance(account_id)
+            if acct.account_id == account_id and acct.user_name == name and acct.balance == balance:
+                status = True
+        if status:
+            return user_service_pb2.Account(account_id=account_id, user_name=name, balance=balance)
+        else:
+            return None
 
     def pick_acct(self):
         return choice(self.accts)
@@ -68,3 +86,9 @@ class UserServiceClient(object):
         from_acct.balance -= pay_amount
         to_acct.balance += pay_amount
         return response.status
+
+    def get_balance(self, acct_id):
+        response = self.stub.GetBalanceCall(
+            user_service_pb2.GetBalanceRequest(account_id=acct_id)
+        )
+        return response.account

@@ -22,6 +22,7 @@ from honeybadgerbft.exceptions import UnknownTagError
 
 from google.protobuf.json_format import MessageToJson, Parse
 
+
 class BroadcastTag(Enum):
     ACS_COIN = 'ACS_COIN'
     ACS_RBC = 'ACS_RBC'
@@ -106,7 +107,7 @@ class HoneyBadgerBFT():
                 txn_s = MessageToJson(txn, indent=False).replace('\n', '')
                 # print('Changed to txn_s', txn_s, flush=True)
                 self.submit_tx(txn_s)
-            #DELETE For test:
+            # DELETE For test:
             #     self.save_block(txn_s)
             # self.read_block()
 
@@ -124,7 +125,7 @@ class HoneyBadgerBFT():
         if os.listdir(self.block_path):
             last_file = sorted(os.listdir(self.block_path))[-1]
             f = open(os.path.join(self.block_path, last_file), 'r')
-            if(len(f.readlines()) < self.block_size + 1):  # one line for hash
+            if (len(f.readlines()) < self.block_size + 1):  # one line for hash
                 with open(os.path.join(os.path.join(self.block_path, last_file)), 'a') as wf:
                     # json.dump(tx, wf)
                     wf.write(tx + '\n')
@@ -145,16 +146,27 @@ class HoneyBadgerBFT():
             wf.write(tx + '\n')
         return
 
-    def read_block(self):
-        for file in os.listdir(self.block_path):
-            with open(os.path.join(self.block_path, file), 'r') as f:
-                #TODO: Check the has matches previous block file's content
+    @staticmethod
+    def read_block(block_path):
+        for file in os.listdir(block_path):
+            with open(os.path.join(block_path, file), 'r') as f:
+                # TODO: Check the hash matches previous block file's content
                 txns = f.readlines()
                 for tx in txns[1:]:
                     tx_message = Parse(tx, user_service_pb2.PayToRequest())
-                    # print("read", tx)
-                    # print("After converting", tx_message)
-                    #TODO: Add logic to calculate the balance
+                    yield tx_message
+
+    @staticmethod
+    def get_balance(block_path, acct_id: int):
+        user_name, balance = '', 0
+        for tx_message in HoneyBadgerBFT.read_block(block_path):
+            if acct_id == tx_message.src_acct.account_id:
+                balance -= tx_message.amount
+                user_name = tx_message.src_acct.user_name
+            elif acct_id == tx_message.des_acct.account_id:
+                balance += tx_message.amount
+                user_name = tx_message.des_acct.user_name
+        return user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
 
     def run(self):
         """Run the HoneyBadgerBFT protocol."""
@@ -167,7 +179,7 @@ class HoneyBadgerBFT():
                 # Maintain an *unbounded* recv queue for each epoch
                 if r not in self._per_round_recv:
                     # Buffer this message
-                    assert r >= self.round      # pragma: no cover
+                    assert r >= self.round  # pragma: no cover
                     self._per_round_recv[r] = Queue()
 
                 _recv = self._per_round_recv[r]
@@ -204,7 +216,9 @@ class HoneyBadgerBFT():
             def _make_send(r):
                 def _send(j, o):
                     self._send(j, (r, o))
+
                 return _send
+
             send_r = _make_send(r)
             recv_r = self._per_round_recv[r].get
             tx = "||".join(tx_to_send)
@@ -251,7 +265,7 @@ class HoneyBadgerBFT():
             end = datetime.now()
             print(f"Node {self.pid}: time for round {self.round}: {end - start}. Total transactions: {len(new_single_tx)} ", flush=True)
 
-            self.round += 1     # Increment the round
+            self.round += 1  # Increment the round
             # if self.round >= 3:
             #     break   # Only run one round for now
 
@@ -279,10 +293,10 @@ class HoneyBadgerBFT():
 
         # Launch ACS, ABA, instances
         coin_recvs = [None] * N
-        aba_recvs  = [None] * N  # noqa: E221
-        rbc_recvs  = [None] * N  # noqa: E221
+        aba_recvs = [None] * N  # noqa: E221
+        rbc_recvs = [None] * N  # noqa: E221
 
-        aba_inputs  = [Queue(1) for _ in range(N)]  # noqa: E221
+        aba_inputs = [Queue(1) for _ in range(N)]  # noqa: E221
         aba_outputs = [Queue(1) for _ in range(N)]
         rbc_outputs = [Queue(1) for _ in range(N)]
 
@@ -294,6 +308,7 @@ class HoneyBadgerBFT():
 
             :param int j: Node index for which the setup is being done.
             """
+
             def coin_bcast(o):
                 """Common coin multicast operation.
 
@@ -314,7 +329,7 @@ class HoneyBadgerBFT():
                 broadcast(('ACS_ABA', j, o))
 
             aba_recvs[j] = Queue()
-            gevent.spawn(binaryagreement, sid+'ABA'+str(j), pid, N, f, coin,
+            gevent.spawn(binaryagreement, sid + 'ABA' + str(j), pid, N, f, coin,
                          aba_inputs[j].get, aba_outputs[j].put_nowait,
                          aba_bcast, aba_recvs[j].get)
 
@@ -328,7 +343,7 @@ class HoneyBadgerBFT():
             # Only leader gets input
             rbc_input = my_rbc_input.get if j == pid else None
             rbc_recvs[j] = Queue()
-            rbc = gevent.spawn(reliablebroadcast, sid+'RBC'+str(j), pid, N, f, j,
+            rbc = gevent.spawn(reliablebroadcast, sid + 'RBC' + str(j), pid, N, f, j,
                                rbc_input, rbc_recvs[j].get, rbc_send)
             rbc_outputs[j] = rbc.get  # block for output from rbc
 
