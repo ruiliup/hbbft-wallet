@@ -27,6 +27,7 @@ import threading
 import pickle
 import argparse
 import shutil
+import os
 
 
 def read_keys():
@@ -203,7 +204,9 @@ if __name__ == "__main__":
     pid = int(args.pid)
 
     # start a clean folder for blocks
-    shutil.rmtree(f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}')
+    block_file_path = f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}'
+    if os.path.exists(block_file_path) and os.path.isdir(block_file_path):
+        shutil.rmtree(f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}')
     
     PK, SKs = initiateThresholdSig(open(args.threshold_sig_keys, "rb"))
     encPK, encSKs = initiateThresholdEnc(open(args.threshold_enc_keys, "rb"))
