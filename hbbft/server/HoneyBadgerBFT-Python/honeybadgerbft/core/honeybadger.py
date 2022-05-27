@@ -9,7 +9,7 @@ import hashlib
 import time
 import random
 from datetime import datetime
-from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc, user_service_pb2
+from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
 from hbbft.common.setting import user_service_port
 from google.protobuf.json_format import MessageToJson, Parse
 
@@ -99,8 +99,8 @@ class HoneyBadgerBFT():
         # test get transactions from grpc.
         with grpc.insecure_channel(f'localhost:{user_service_port}') as channel:
             # fetch this txn from grpc to hbbft.
-            stub2 = hbbft_service_pb2_grpc.HBBFTServiceStub(channel)
-            request = hbbft_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+            stub2 = user_service_pb2_grpc.UserServiceStub(channel)
+            request = user_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             txns = stub2.GetTransactions(request)
             for txn in txns:
                 # print('Get_tx', txn, flush=True)

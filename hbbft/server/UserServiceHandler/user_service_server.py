@@ -1,8 +1,9 @@
+import time
 from concurrent import futures
 import grpc
+import os
 from queue import Queue
 from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
-from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc
 from honeybadgerbft.core.honeybadger import HoneyBadgerBFT
 
 database = Queue()
@@ -18,7 +19,9 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
                 amount=request.amount,
                 timestamp=request.timestamp
             )
-            database.put(txn)
+            user_txn = user_service_pb2.UserTransaction()
+            user_txn.transaction.CopyFrom(txn)
+            database.put(user_txn)
 
         except grpc.RpcError as e:
             print(e)
@@ -29,16 +32,18 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
     def GetBalanceCall(self, request, context):
         # since each node has same files, we pick up node 0 here.
         block_path = f'/usr/local/src/hbbft-wallet/test/blocks/block_file_0'
+        while not os.path.exists(block_path):
+            time.sleep(5)
+            print("Blocks not found. Wait 5 sec...")
         acct = HoneyBadgerBFT.get_balance(block_path, request.account_id)
         return user_service_pb2.GetBalanceResponse(account=acct)
 
     def Register(self, request, context):
         try:
-            txn = user_service_pb2.Account(
-                account_id=request.account_id,
-                user_name=request.user_name,
-                balance=request.balance
-            )
+            txn = user_service_pb2.UserTransaction()
+            txn.account.account_id = request.account_id
+            txn.account.user_name = request.user_name
+            txn.account.balance = request.balance
             database.put(txn)
 
         except grpc.RpcError as e:
@@ -46,10 +51,6 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
             return user_service_pb2.RegisterResponse(status=False)
         else:
             return user_service_pb2.RegisterResponse(status=True)
-
-
-class HBBFTService(hbbft_service_pb2_grpc.HBBFTServiceServicer):
-    """Missing associated documentation comment in .proto file."""
 
     def GetTransactions(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -65,7 +66,6 @@ class UserServiceServer(object):
     def run(self):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         user_service_pb2_grpc.add_UserServiceServicer_to_server(UserService(), server)
-        hbbft_service_pb2_grpc.add_HBBFTServiceServicer_to_server(HBBFTService(), server)
         server.add_insecure_port(f"[::]:{self.port}")
         server.start()
         print("User Service Server started", flush=True)

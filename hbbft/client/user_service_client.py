@@ -17,9 +17,9 @@ class UserServiceClient(object):
         self.port = port
         self.num = num
         self.accts = []
-        self.create_accts()
         self.channel = grpc.insecure_channel(f'{self.ip}:{self.port}')
         self.stub = user_service_pb2_grpc.UserServiceStub(self.channel)
+        self.create_accts()
 
     def close(self):
         self.channel.close()
@@ -47,6 +47,7 @@ class UserServiceClient(object):
             if acct.account_id == account_id and acct.user_name == name and acct.balance == balance:
                 status = True
         if status:
+            print(f'successfully created {name}')
             return user_service_pb2.Account(account_id=account_id, user_name=name, balance=balance)
         else:
             return None

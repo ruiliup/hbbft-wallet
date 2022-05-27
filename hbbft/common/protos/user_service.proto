@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 package grpc_service;
 
 //Account
@@ -37,9 +39,18 @@ message RegisterResponse {
   bool status = 1;
 }
 
+//
+message UserTransaction {
+  oneof txn {
+    Account account = 1;
+    PayToRequest transaction = 2;
+  }
+}
+
 // The UserService definitions
 service UserService {
   rpc GetBalanceCall (GetBalanceRequest) returns (GetBalanceResponse) {}
   rpc PayToCall (PayToRequest) returns (PayToResponse) {}
   rpc Register (Account) returns (RegisterResponse) {}
+  rpc GetTransactions (google.protobuf.Empty) returns (stream UserTransaction) {}
 }
