@@ -29,6 +29,7 @@ class UserServiceClient(object):
             acct_id = randint(1, 1000)
             name = ''.join(choices(ascii_letters, k=4))
             balance = int(1e9)
+            print(f'create account: {acct_id} {name} {balance}', flush=True)
             self.accts.append(self.create_account(acct_id, name, balance))
 
     def create_account(self, account_id: int, name: str, balance: int):
@@ -47,9 +48,10 @@ class UserServiceClient(object):
             if acct.account_id == account_id and acct.user_name == name and acct.balance == balance:
                 status = True
         if status:
-            print(f'successfully created {name}')
+            print(f'successfully created account for {name}', flush=True)
             return user_service_pb2.Account(account_id=account_id, user_name=name, balance=balance)
         else:
+            print(f'failed to create account for {name}')
             return None
 
     def pick_acct(self):

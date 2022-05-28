@@ -105,8 +105,6 @@ class HoneyBadgerBFT():
             for txn in txns:
                 print('Get_tx', txn, flush=True)
                 txn_s = MessageToJson(txn, indent=False).replace('\n', '')
-                # new_txn = Parse(txn_s, user_service_pb2.UserTransaction())
-                # print(f'test {new_txn}')
                 # print('Changed to txn_s', txn_s, flush=True)
                 self.submit_tx(txn_s)
             # DELETE For test:
@@ -156,22 +154,26 @@ class HoneyBadgerBFT():
                 # TODO: Check the hash matches previous block file's content
                 txns = f.readlines()
                 for tx in txns[1:]:
-                    print(f"{__class__} {tx}", flush=True)
-                    tx_message = Parse(tx, user_service_pb2.UserTransaction(), True)
-                    print(f"test read block: {tx_message}")
+                    tx_message = Parse(tx, user_service_pb2.UserTransaction())
                     yield tx_message
 
     @staticmethod
     def get_balance(block_path, acct_id: int):
         user_name, balance = '', 0
+        print(f'get balance for {acct_id}', flush=True)
         for tx_message in HoneyBadgerBFT.read_block(block_path):
-            print(f"read block: {tx_message}")
-            if acct_id == tx_message.src_acct.account_id:
-                balance -= tx_message.amount
-                user_name = tx_message.src_acct.user_name
-            elif acct_id == tx_message.des_acct.account_id:
-                balance += tx_message.amount
-                user_name = tx_message.des_acct.user_name
+            print(f"get balance: read from block: {tx_message}", flush=True)
+            if tx_message.HasField('account') and acct_id == tx_message.account.account_id:
+                balance += tx_message.account.balance
+                user_name = tx_message.account.user_name
+            elif tx_message.HasField('transaction'):
+                if acct_id == tx_message.src_acct.account_id:
+                    balance -= tx_message.amount
+                    user_name = tx_message.src_acct.user_name
+                elif acct_id == tx_message.des_acct.account_id:
+                    balance += tx_message.amount
+                    user_name = tx_message.des_acct.user_name
+        print(f'Get balance: {user_name} {balance}', flush=True)
         return user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
 
     def run(self):

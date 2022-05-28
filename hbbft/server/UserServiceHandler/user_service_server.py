@@ -11,7 +11,7 @@ database = Queue()
 
 class UserService(user_service_pb2_grpc.UserServiceServicer):
     def PayToCall(self, request, context):
-        # print("PayTo service requested")
+        print("PayTo service requested", flush=True)
         try:
             txn = user_service_pb2.PayToRequest(
                 src_acct=request.src_acct,
@@ -24,7 +24,7 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
             database.put(user_txn)
 
         except grpc.RpcError as e:
-            print(e)
+            print(e, flush=True)
             return user_service_pb2.PayToResponse(status=False)
         else:
             return user_service_pb2.PayToResponse(status=True)
@@ -34,20 +34,24 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
         block_path = f'/usr/local/src/hbbft-wallet/test/blocks/block_file_0'
         while not os.path.exists(block_path):
             time.sleep(5)
-            print("Blocks not found. Wait 5 sec...")
+            print("Blocks not found. Wait 5 sec...", flush=True)
         acct = HoneyBadgerBFT.get_balance(block_path, request.account_id)
         return user_service_pb2.GetBalanceResponse(account=acct)
 
     def Register(self, request, context):
         try:
+            account = user_service_pb2.Account(
+                account_id=request.account_id,
+                user_name=request.user_name,
+                balance=request.balance
+            )
             usr_txn = user_service_pb2.UserTransaction()
-            usr_txn.account.account_id = request.account_id
-            usr_txn.account.user_name = request.user_name
-            usr_txn.account.balance = request.balance
+            usr_txn.account.CopyFrom(account)
             database.put(usr_txn)
+            print(f'register: {usr_txn}', flush=True)
 
         except grpc.RpcError as e:
-            print(e)
+            print(e, flush=True)
             return user_service_pb2.RegisterResponse(status=False)
         else:
             return user_service_pb2.RegisterResponse(status=True)
