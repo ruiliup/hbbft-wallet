@@ -192,15 +192,17 @@ if __name__ == "__main__":
     parser.add_argument("N", help="Number of nodes")
     parser.add_argument("f", help="Max number of fault")
     parser.add_argument("pid", help="pid of node")
+    parser.add_argument("B", help="batch size")
     parser.add_argument("threshold_sig_keys", help="location of threshold signature keys")
     parser.add_argument("threshold_enc_keys", help="location of threshold encryption keys")
+    
     args = parser.parse_args()
 
     # initiate honeybadgerBFT
     sid = "sidA"
     N = int(args.N)
     f = int(args.f)
-    B = 1
+    B = int(args.B)
     pid = int(args.pid)
 
     # start a clean folder for blocks
@@ -215,7 +217,7 @@ if __name__ == "__main__":
     send, recv = router(pid)
 
     badger = HoneyBadgerBFT(
-        sid, pid, 1, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv, f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}'
+        sid, pid, B, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv, f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}'
     )
     time.sleep(5)
 

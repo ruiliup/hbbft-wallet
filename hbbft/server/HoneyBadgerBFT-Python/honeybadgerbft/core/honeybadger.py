@@ -205,43 +205,47 @@ class HoneyBadgerBFT():
                 return _send
             send_r = _make_send(r)
             recv_r = self._per_round_recv[r].get
-            tx = ""
+            tx = "||".join(tx_to_send)
             
-            if len(tx_to_send) > 0:
-                decoded_tx = Parse(tx_to_send[0], user_service_pb2.PayToRequest())
-                src_account = decoded_tx.src_acct.user_name
-                if src_account in self.balance_cache.keys() and self.balance_cache[src_account] >= decoded_tx.amount:
-                    tx = tx_to_send[0]
+            # if len(tx_to_send) > 0:
+            #     decoded_tx = Parse(tx_to_send[0], user_service_pb2.PayToRequest())
+            #     src_account = decoded_tx.src_acct.user_name
+            #     if src_account in self.balance_cache.keys() and self.balance_cache[src_account] >= decoded_tx.amount:
+            #         tx = tx_to_send[0]
 
             new_tx = self._run_round(r, tx, send_r, recv_r)
             print('new_tx:', new_tx, flush=True)
 
-            # Remove all of the new transactions from the buffer
-            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if bytearray(_tx, encoding="utf-8") not in new_tx]
-
             # write transactions to block files
+            new_single_tx = []
             for tx in new_tx:
                 if tx:
-                    self.save_block(tx.decode())
+                    batch = tx.decode().split("||")
+                    for single_tx in batch:
+                        self.save_block(single_tx)
+                        new_single_tx.append(single_tx)
+
+            # Remove all of the new transactions from the buffer
+            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if _tx not in new_single_tx]
 
             # update balance cache
             # TODO: support batched transaction process
-            if new_tx[self.pid]:
-                decoded_tx = Parse(new_tx[self.pid], user_service_pb2.PayToRequest())
-                src_account = decoded_tx.src_acct.user_name
-                if src_account in self.balance_cache.keys():
-                    self.balance_cache[src_account] -= decoded_tx.amount
-                else:
-                    self.balance_cache[src_account] = 10000 - decoded_tx.amount
+            # if new_tx[self.pid]:
+            #     decoded_tx = Parse(new_tx[self.pid], user_service_pb2.PayToRequest())
+            #     src_account = decoded_tx.src_acct.user_name
+            #     if src_account in self.balance_cache.keys():
+            #         self.balance_cache[src_account] -= decoded_tx.amount
+            #     else:
+            #         self.balance_cache[src_account] = 10000 - decoded_tx.amount
 
-            for tx in new_tx:
-                if tx:
-                    decoded_tx =  Parse(tx, user_service_pb2.PayToRequest())
-                    dst_account = decoded_tx.des_acct.user_name
-                    if dst_account in self.balance_cache.keys():
-                        self.balance_cache[dst_account] += decoded_tx.amount
+            # for tx in new_tx:
+            #     if tx:
+            #         decoded_tx =  Parse(tx, user_service_pb2.PayToRequest())
+            #         dst_account = decoded_tx.des_acct.user_name
+            #         if dst_account in self.balance_cache.keys():
+            #             self.balance_cache[dst_account] += decoded_tx.amount
 
-            print("balances: ", self.balance_cache, flush=True)
+            # print("balances: ", self.balance_cache, flush=True)
 
             self.round += 1     # Increment the round
             # if self.round >= 3:
