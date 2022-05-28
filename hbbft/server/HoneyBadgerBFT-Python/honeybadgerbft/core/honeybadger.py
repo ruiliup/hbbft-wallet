@@ -167,12 +167,12 @@ class HoneyBadgerBFT():
                 balance += tx_message.account.balance
                 user_name = tx_message.account.user_name
             elif tx_message.HasField('transaction'):
-                if acct_id == tx_message.src_acct.account_id:
-                    balance -= tx_message.amount
-                    user_name = tx_message.src_acct.user_name
-                elif acct_id == tx_message.des_acct.account_id:
-                    balance += tx_message.amount
-                    user_name = tx_message.des_acct.user_name
+                if acct_id == tx_message.transaction.src_acct.account_id:
+                    balance -= tx_message.transaction.amount
+                    user_name = tx_message.transaction.src_acct.user_name
+                elif acct_id == tx_message.transaction.des_acct.account_id:
+                    balance += tx_message.transaction.amount
+                    user_name = tx_message.transaction.des_acct.user_name
         print(f'Get balance: {user_name} {balance}', flush=True)
         return user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
 
