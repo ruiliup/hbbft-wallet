@@ -40,11 +40,11 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
 
     def Register(self, request, context):
         try:
-            txn = user_service_pb2.UserTransaction()
-            txn.account.account_id = request.account_id
-            txn.account.user_name = request.user_name
-            txn.account.balance = request.balance
-            database.put(txn)
+            usr_txn = user_service_pb2.UserTransaction()
+            usr_txn.account.account_id = request.account_id
+            usr_txn.account.user_name = request.user_name
+            usr_txn.account.balance = request.balance
+            database.put(usr_txn)
 
         except grpc.RpcError as e:
             print(e)

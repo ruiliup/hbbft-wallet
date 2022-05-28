@@ -1,3 +1,4 @@
+import json
 from collections import namedtuple
 from enum import Enum
 
@@ -11,7 +12,6 @@ import random
 from datetime import datetime
 from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
 from hbbft.common.setting import user_service_port
-from google.protobuf.json_format import MessageToJson, Parse
 
 from honeybadgerbft.core.commoncoin import shared_coin
 from honeybadgerbft.core.binaryagreement import binaryagreement
@@ -103,8 +103,10 @@ class HoneyBadgerBFT():
             request = user_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             txns = stub2.GetTransactions(request)
             for txn in txns:
-                # print('Get_tx', txn, flush=True)
+                print('Get_tx', txn, flush=True)
                 txn_s = MessageToJson(txn, indent=False).replace('\n', '')
+                # new_txn = Parse(txn_s, user_service_pb2.UserTransaction())
+                # print(f'test {new_txn}')
                 # print('Changed to txn_s', txn_s, flush=True)
                 self.submit_tx(txn_s)
             # DELETE For test:
@@ -120,12 +122,13 @@ class HoneyBadgerBFT():
         self.transaction_buffer.append(tx)
 
     def save_block(self, tx):
+        print(f'save block: {tx}', flush=True)
         if not os.path.exists(self.block_path):
             os.makedirs(self.block_path)
         if os.listdir(self.block_path):
             last_file = sorted(os.listdir(self.block_path))[-1]
             f = open(os.path.join(self.block_path, last_file), 'r')
-            if (len(f.readlines()) < self.block_size + 1):  # one line for hash
+            if len(f.readlines()) < self.block_size + 1:  # one line for hash
                 with open(os.path.join(os.path.join(self.block_path, last_file)), 'a') as wf:
                     # json.dump(tx, wf)
                     wf.write(tx + '\n')
@@ -153,13 +156,16 @@ class HoneyBadgerBFT():
                 # TODO: Check the hash matches previous block file's content
                 txns = f.readlines()
                 for tx in txns[1:]:
-                    tx_message = Parse(tx, user_service_pb2.PayToRequest())
+                    print(f"{__class__} {tx}", flush=True)
+                    tx_message = Parse(tx, user_service_pb2.UserTransaction(), True)
+                    print(f"test read block: {tx_message}")
                     yield tx_message
 
     @staticmethod
     def get_balance(block_path, acct_id: int):
         user_name, balance = '', 0
         for tx_message in HoneyBadgerBFT.read_block(block_path):
+            print(f"read block: {tx_message}")
             if acct_id == tx_message.src_acct.account_id:
                 balance -= tx_message.amount
                 user_name = tx_message.src_acct.user_name
