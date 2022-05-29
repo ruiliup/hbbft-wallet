@@ -109,7 +109,10 @@ def router(pid):
                 # print('TPKE message send')
                 # print(op_payload)
                 for share in op_payload:
-                    bcast_msg.te_op.ser_shares.append(tpke.serialize(share))
+                    if share is None:
+                        bcast_msg.te_op.ser_shares.append(b'None')
+                    else:
+                        bcast_msg.te_op.ser_shares.append(tpke.serialize(share))
             elif 'ACS_RBC' == op_type:
                 bcast_msg.rb_op.payload = pickle.dumps(op_payload)
             elif 'ACS_ABA' == op_type:
@@ -145,7 +148,10 @@ def router(pid):
                         # print('TPKE message recv')
                         des_op_msg = []
                         for share in op_msg.ser_shares:
-                            des_op_msg.append(tpke.deserialize1(share))
+                            if share == b'None':
+                                des_op_msg.append(None)
+                            else:
+                                des_op_msg.append(tpke.deserialize1(share))
                     elif 'ACS_RBC' == op_type:
                         des_op_msg = pickle.loads(op_msg.payload)
                     elif 'ACS_ABA' == op_type:
