@@ -8,6 +8,7 @@ import grpc
 import hashlib
 import time
 import random
+from datetime import datetime
 from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc, user_service_pb2
 from hbbft.common.setting import user_service_port
 from google.protobuf.json_format import MessageToJson, Parse
@@ -114,7 +115,7 @@ class HoneyBadgerBFT():
 
         :param tx: Transaction to append to the buffer.
         """
-        print('submit_tx', self.pid, tx, '\n', flush=True)
+        # print('submit_tx', self.pid, tx, '\n', flush=True)
         self.transaction_buffer.append(tx)
 
     def save_block(self, tx):
@@ -182,6 +183,7 @@ class HoneyBadgerBFT():
         random.seed()
 
         while True:
+            start = datetime.now()
             # For each round...
             r = self.round
             if r not in self._per_round_recv:
@@ -214,7 +216,7 @@ class HoneyBadgerBFT():
             #         tx = tx_to_send[0]
 
             new_tx = self._run_round(r, tx, send_r, recv_r)
-            print('new_tx:', new_tx, flush=True)
+            # print('new_tx:', new_tx, flush=True)
 
             # write transactions to block files
             new_single_tx = []
@@ -246,6 +248,8 @@ class HoneyBadgerBFT():
             #             self.balance_cache[dst_account] += decoded_tx.amount
 
             # print("balances: ", self.balance_cache, flush=True)
+            end = datetime.now()
+            print(f"Node {self.pid}: time for round {self.round}: {end - start} ", flush=True)
 
             self.round += 1     # Increment the round
             # if self.round >= 3:
@@ -283,7 +287,7 @@ class HoneyBadgerBFT():
         rbc_outputs = [Queue(1) for _ in range(N)]
 
         my_rbc_input = Queue(1)
-        print(pid, r, 'tx_to_send:', tx_to_send)
+        # print(pid, r, 'tx_to_send:', tx_to_send)
 
         def _setup(j):
             """Setup the sub protocols RBC, BA and common coin.
