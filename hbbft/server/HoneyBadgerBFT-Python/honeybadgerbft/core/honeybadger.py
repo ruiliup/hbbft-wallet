@@ -90,7 +90,7 @@ class HoneyBadgerBFT():
         self.round = 0  # Current block number
         self.transaction_buffer = []
         self.block_path = block_path
-        self.block_size = 2
+        self.block_size = 100
         self._per_round_recv = {}  # Buffer of incoming messages
         self.balance_cache = {} # dictionary to store balance of all users that routes to this node
 
@@ -139,7 +139,7 @@ class HoneyBadgerBFT():
                     bytes = rf.read()
                     readable_hash = hashlib.sha256(bytes).hexdigest()
             else:
-                readable_hash = hashlib.sha256(str(timestamp_file).encode('utf-8')).hexdigest()
+                readable_hash = hashlib.sha256(str("genesis_block").encode('utf-8')).hexdigest()
             # print("write readable_hash", readable_hash)
             wf.write(readable_hash + '\n')
             wf.write(tx + '\n')

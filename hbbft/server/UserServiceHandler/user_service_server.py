@@ -9,7 +9,7 @@ database = Queue()
 
 class UserService(user_service_pb2_grpc.UserServiceServicer):
     def PayToCall(self, request, context):
-        print("PayTo service requested")
+        # print("PayTo service requested")
         try:
             txn = user_service_pb2.PayToRequest(
                 src_acct=request.src_acct,
