@@ -109,7 +109,10 @@ def router(pid):
                 # print('TPKE message send')
                 # print(op_payload)
                 for share in op_payload:
-                    bcast_msg.te_op.ser_shares.append(tpke.serialize(share))
+                    if share is None:
+                        bcast_msg.te_op.ser_shares.append(b'None')
+                    else:
+                        bcast_msg.te_op.ser_shares.append(tpke.serialize(share))
             elif 'ACS_RBC' == op_type:
                 bcast_msg.rb_op.payload = pickle.dumps(op_payload)
             elif 'ACS_ABA' == op_type:
@@ -145,7 +148,10 @@ def router(pid):
                         # print('TPKE message recv')
                         des_op_msg = []
                         for share in op_msg.ser_shares:
-                            des_op_msg.append(tpke.deserialize1(share))
+                            if share == b'None':
+                                des_op_msg.append(None)
+                            else:
+                                des_op_msg.append(tpke.deserialize1(share))
                     elif 'ACS_RBC' == op_type:
                         des_op_msg = pickle.loads(op_msg.payload)
                     elif 'ACS_ABA' == op_type:
@@ -192,15 +198,17 @@ if __name__ == "__main__":
     parser.add_argument("N", help="Number of nodes")
     parser.add_argument("f", help="Max number of fault")
     parser.add_argument("pid", help="pid of node")
+    parser.add_argument("B", help="batch size")
     parser.add_argument("threshold_sig_keys", help="location of threshold signature keys")
     parser.add_argument("threshold_enc_keys", help="location of threshold encryption keys")
+    
     args = parser.parse_args()
 
     # initiate honeybadgerBFT
     sid = "sidA"
     N = int(args.N)
     f = int(args.f)
-    B = 1
+    B = int(args.B)
     pid = int(args.pid)
 
     # start a clean folder for blocks
@@ -215,7 +223,7 @@ if __name__ == "__main__":
     send, recv = router(pid)
 
     badger = HoneyBadgerBFT(
-        sid, pid, 1, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv, f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}'
+        sid, pid, B, N, f, PK, SKs[pid], encPK, encSKs[pid], send, recv, f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}'
     )
     time.sleep(5)
 

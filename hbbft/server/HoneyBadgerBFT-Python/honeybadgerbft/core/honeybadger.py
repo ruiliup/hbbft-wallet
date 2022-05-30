@@ -7,6 +7,8 @@ from gevent.queue import Queue
 import grpc
 import hashlib
 import time
+import random
+from datetime import datetime
 from hbbft.common.protos import hbbft_service_pb2, hbbft_service_pb2_grpc, user_service_pb2
 from hbbft.common.setting import user_service_port
 from google.protobuf.json_format import MessageToJson, Parse
@@ -88,8 +90,9 @@ class HoneyBadgerBFT():
         self.round = 0  # Current block number
         self.transaction_buffer = []
         self.block_path = block_path
-        self.block_size = 2
+        self.block_size = 100
         self._per_round_recv = {}  # Buffer of incoming messages
+        self.balance_cache = {} # dictionary to store balance of all users that routes to this node
 
     def get_txn(self, user_service_port):
         # test get transactions from grpc.
@@ -112,7 +115,7 @@ class HoneyBadgerBFT():
 
         :param tx: Transaction to append to the buffer.
         """
-        print('submit_tx', self.pid, tx, '\n', flush=True)
+        # print('submit_tx', self.pid, tx, '\n', flush=True)
         self.transaction_buffer.append(tx)
 
     def save_block(self, tx):
@@ -136,7 +139,7 @@ class HoneyBadgerBFT():
                     bytes = rf.read()
                     readable_hash = hashlib.sha256(bytes).hexdigest()
             else:
-                readable_hash = hashlib.sha256(str(timestamp_file).encode('utf-8')).hexdigest()
+                readable_hash = hashlib.sha256(str("genesis_block").encode('utf-8')).hexdigest()
             # print("write readable_hash", readable_hash)
             wf.write(readable_hash + '\n')
             wf.write(tx + '\n')
@@ -177,16 +180,23 @@ class HoneyBadgerBFT():
                 # round and will stop participating!
 
         self._recv_thread = gevent.spawn(_recv)
+        random.seed()
 
         while True:
+            start = datetime.now()
             # For each round...
             r = self.round
             if r not in self._per_round_recv:
                 self._per_round_recv[r] = Queue()
 
             # Select all the transactions (TODO: actual random selection)
-            tx_to_send = self.transaction_buffer[:self.B]
-
+            # tx_to_send = self.transaction_buffer[:self.B]
+            tx_to_send = []
+            if len(self.transaction_buffer) > self.B:
+                tx_to_send = random.sample(self.transaction_buffer, self.B)
+            else:
+                tx_to_send = self.transaction_buffer[::]
+            print(f"tx_to_send number: {len(tx_to_send)}")
             # TODO: Wait a bit if transaction buffer is not full
             self.get_txn(user_service_port)
 
@@ -197,19 +207,49 @@ class HoneyBadgerBFT():
                 return _send
             send_r = _make_send(r)
             recv_r = self._per_round_recv[r].get
-            tx = ""
-            if len(tx_to_send) > 0:
-                tx = tx_to_send[0]
-            new_tx = self._run_round(r, tx, send_r, recv_r)
-            print('new_tx:', new_tx, flush=True)
+            tx = "||".join(tx_to_send)
+            
+            # if len(tx_to_send) > 0:
+            #     decoded_tx = Parse(tx_to_send[0], user_service_pb2.PayToRequest())
+            #     src_account = decoded_tx.src_acct.user_name
+            #     if src_account in self.balance_cache.keys() and self.balance_cache[src_account] >= decoded_tx.amount:
+            #         tx = tx_to_send[0]
 
-            # Remove all of the new transactions from the buffer
-            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if bytearray(_tx, encoding="utf-8") not in new_tx]
+            new_tx = self._run_round(r, tx, send_r, recv_r)
+            # print('new_tx:', new_tx, flush=True)
 
             # write transactions to block files
+            new_single_tx = []
             for tx in new_tx:
                 if tx:
-                    self.save_block(tx.decode())
+                    batch = tx.decode().split("||")
+                    for single_tx in batch:
+                        self.save_block(single_tx)
+                        new_single_tx.append(single_tx)
+
+            # Remove all of the new transactions from the buffer
+            self.transaction_buffer = [_tx for _tx in self.transaction_buffer if _tx not in new_single_tx]
+
+            # update balance cache
+            # TODO: support batched transaction process
+            # if new_tx[self.pid]:
+            #     decoded_tx = Parse(new_tx[self.pid], user_service_pb2.PayToRequest())
+            #     src_account = decoded_tx.src_acct.user_name
+            #     if src_account in self.balance_cache.keys():
+            #         self.balance_cache[src_account] -= decoded_tx.amount
+            #     else:
+            #         self.balance_cache[src_account] = 10000 - decoded_tx.amount
+
+            # for tx in new_tx:
+            #     if tx:
+            #         decoded_tx =  Parse(tx, user_service_pb2.PayToRequest())
+            #         dst_account = decoded_tx.des_acct.user_name
+            #         if dst_account in self.balance_cache.keys():
+            #             self.balance_cache[dst_account] += decoded_tx.amount
+
+            # print("balances: ", self.balance_cache, flush=True)
+            end = datetime.now()
+            print(f"Node {self.pid}: time for round {self.round}: {end - start}. Total transactions: {len(new_single_tx)} ", flush=True)
 
             self.round += 1     # Increment the round
             # if self.round >= 3:
@@ -247,7 +287,7 @@ class HoneyBadgerBFT():
         rbc_outputs = [Queue(1) for _ in range(N)]
 
         my_rbc_input = Queue(1)
-        print(pid, r, 'tx_to_send:', tx_to_send)
+        # print(pid, r, 'tx_to_send:', tx_to_send)
 
         def _setup(j):
             """Setup the sub protocols RBC, BA and common coin.

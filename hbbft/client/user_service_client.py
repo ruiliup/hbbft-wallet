@@ -24,7 +24,7 @@ class UserServiceClient(object):
 
     def create_accts(self):
         for _ in range(self.num):
-            acct_id = randint(0, self.num - 1)
+            acct_id = randint(1, 1000)
             name = ''.join(choices(ascii_letters, k=4))
             balance = int(1e9)
             self.accts.append(self.create_account(acct_id, name, balance))
