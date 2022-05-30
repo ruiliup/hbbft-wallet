@@ -1,5 +1,4 @@
 syntax = "proto3";
-import "hbbft/common/protos/user_service.proto";
 import "google/protobuf/empty.proto";
 
 package grpc_service;
@@ -46,9 +45,4 @@ message BroadcastMessage
 // The BackendService definitions
 service BackendService {
   rpc BroadcastCall (BroadcastMessage) returns (google.protobuf.Empty) {}
-}
-
-
-service HBBFTService {
-  rpc GetTransactions (google.protobuf.Empty) returns (stream  grpc_service.PayToRequest);
 }
