@@ -196,7 +196,7 @@ class HoneyBadgerBFT():
                 tx_to_send = random.sample(self.transaction_buffer, self.B)
             else:
                 tx_to_send = self.transaction_buffer[::]
-
+            print(f"tx_to_send number: {len(tx_to_send)}")
             # TODO: Wait a bit if transaction buffer is not full
             self.get_txn(user_service_port)
 
@@ -249,7 +249,7 @@ class HoneyBadgerBFT():
 
             # print("balances: ", self.balance_cache, flush=True)
             end = datetime.now()
-            print(f"Node {self.pid}: time for round {self.round}: {end - start} ", flush=True)
+            print(f"Node {self.pid}: time for round {self.round}: {end - start}. Total transactions: {len(new_single_tx)} ", flush=True)
 
             self.round += 1     # Increment the round
             # if self.round >= 3:
