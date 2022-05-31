@@ -28,13 +28,16 @@ def user_get_balance(stub):
         print(f"Getting account balance for accound_id={aid}, user_name={uname}")
         # Send request over gRPC
         response = stub.GetBalanceCall(
-            user_service_pb2.GetBalanceRequest(account_id=aid, user_name=uname)
+            user_service_pb2.GetBalanceRequest(account_id=aid)
         )
         # Check response
-        if response.balance == account_data[aid]["balance"]:
+        if response is None:
+            print("Failed to get balance")
+        elif response.balance == account_data[aid]["balance"]:
             print(f"Successfully get balance={response.balance}")
         else:
-            print("Failed to get balance")
+            print(f"Balance does not match.")
+            print(f"We got {response.balance} from blockchain, and we want {account_data[aid]['balance']}")
 
 
 def user_pay_to(stub):
