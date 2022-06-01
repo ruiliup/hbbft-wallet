@@ -69,16 +69,12 @@ class UserServiceClient(object):
         to_acct = self.pick_acct()
         while from_acct is to_acct:
             to_acct = self.pick_acct()
-        return self._create_txn(self.stub, from_acct, to_acct)
+        return self._create_txn(from_acct, to_acct)
 
-    def _create_txn(self, stub, from_acct, to_acct):
-        """
-        todo: check balance for each account once we are able to get balance.
-        """
+    def _create_txn(self, from_acct, to_acct):
         pay_amount = randint(0, 100)
         # Select two users
-
-        response = stub.PayToCall(
+        response = self.stub.PayToCall(
             user_service_pb2.PayToRequest(
                 src_acct=from_acct,
                 des_acct=to_acct,

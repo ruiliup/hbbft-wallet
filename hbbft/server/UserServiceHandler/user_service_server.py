@@ -1,3 +1,4 @@
+import datetime
 import time
 from concurrent import futures
 import grpc
@@ -5,6 +6,7 @@ import os
 from queue import Queue
 from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
 from honeybadgerbft.core.honeybadger import HoneyBadgerBFT
+from hbbft.common.setting import total_server, block_path_header
 
 database = Queue()
 
@@ -31,12 +33,18 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
 
     def GetBalanceCall(self, request, context):
         # since each node has same files, we pick up node 0 here.
-        block_path = f'/usr/local/src/hbbft-wallet/test/blocks/block_file_0'
-        while not os.path.exists(block_path):
+        now = datetime.datetime.now()
+        end = now + datetime.timedelta(minutes=5)
+        while now <= end:
+            for server_id in range(total_server):
+                block_path = f'{block_path_header}{server_id}'
+                if os.path.exists(block_path):
+                    acct = HoneyBadgerBFT.get_balance(block_path, request.account_id)
+                    return user_service_pb2.GetBalanceResponse(account=acct)
             time.sleep(5)
-            print("Blocks not found. Wait 5 sec...", flush=True)
-        acct = HoneyBadgerBFT.get_balance(block_path, request.account_id)
-        return user_service_pb2.GetBalanceResponse(account=acct)
+            now = datetime.datetime.now()
+        print("Blocks not found after 5 min", flush=True)
+        return None
 
     def Register(self, request, context):
         try:
