@@ -23,3 +23,8 @@ def test_get_balance():
         acct1 = client.get_balance(client.accts[1].account_id)
     assert abs(client.accts[0].balance - client.accts[1].balance) == abs(acct0.balance - acct1.balance)
     client.close()
+
+
+if __name__ == "__main__":
+    test_create_account()
+    test_get_balance()
