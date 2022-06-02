@@ -11,7 +11,7 @@ import time
 import random
 from datetime import datetime
 from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
-from hbbft.common.setting import user_service_port
+from hbbft.common.setting import user_service_port, total_server, block_path_header
 
 from honeybadgerbft.core.commoncoin import shared_coin
 from honeybadgerbft.core.binaryagreement import binaryagreement
@@ -149,6 +149,8 @@ class HoneyBadgerBFT():
 
     @staticmethod
     def read_block(block_path):
+        if not os.path.exists(block_path):
+            return
         for file in os.listdir(block_path):
             with open(os.path.join(block_path, file), 'r') as f:
                 # TODO: Check the hash matches previous block file's content
@@ -238,16 +240,76 @@ class HoneyBadgerBFT():
             #         tx = tx_to_send[0]
 
             new_tx = self._run_round(r, tx, send_r, recv_r)
-            # print('new_tx:', new_tx, flush=True)
+            print('new_tx:', new_tx, flush=True)
+            
 
             # write transactions to block files
-            new_single_tx = []
+            new_single_tx = set()
             for tx in new_tx:
                 if tx:
                     batch = tx.decode().split("||")
                     for single_tx in batch:
-                        self.save_block(single_tx)
-                        new_single_tx.append(single_tx)
+                        new_single_tx.add(single_tx)
+
+            # Check validity of transactions.
+            # Specifically, transactions that spends above the balance of the user
+            # should be rejected
+
+            src_users = {}
+            wrong_dst_users = set()
+            for tx in new_single_tx:
+                tx_message = Parse(tx, user_service_pb2.UserTransaction())
+                if tx_message.HasField('transaction'):
+                    src_id = tx_message.transaction.src_acct.account_id
+                    dst_id = tx_message.transaction.des_acct.account_id
+                    src_users[src_id] = -1
+                    wrong_dst_users.add(dst_id)
+                elif tx_message.HasField('account'):
+                    src_id = tx_message.account.account_id
+                    src_users[src_id] = -1
+
+            # get the balance of all source accounts involved in this round
+            for tx_message in HoneyBadgerBFT.read_block(self.block_path):
+                if tx_message.HasField('account'):
+                    account_id = tx_message.account.account_id
+                    if account_id in src_users.keys():
+                        src_users[account_id] = tx_message.account.balance
+
+                    if account_id in wrong_dst_users:
+                        wrong_dst_users.remove(account_id)
+                elif tx_message.HasField('transaction'):
+                    if tx_message.transaction.src_acct.account_id in src_users.keys():
+                        src_users[tx_message.transaction.src_acct.account_id] -= tx_message.transaction.amount
+                    elif tx_message.transaction.des_acct.account_id in src_users.keys():
+                        src_users[tx_message.transaction.des_acct.account_id] += tx_message.transaction.amount
+
+            valid_txns = []
+            # check the validity of all transactions involved in this round
+            for tx in new_single_tx:
+                tx_message = Parse(tx, user_service_pb2.UserTransaction())
+                if tx_message.HasField('transaction'):
+                    amount = tx_message.transaction.amount
+                    src_id = tx_message.transaction.src_acct.account_id
+                    dst_id = tx_message.transaction.des_acct.account_id
+                    if amount > src_users[src_id] or dst_id in wrong_dst_users:
+                        print(f"invalid transaction: {tx}", flush=True)
+                    else:
+                        valid_txns.append(tx)
+                        src_users[src_id] -= amount
+                        if dst_id in src_users.keys():
+                            src_users[dst_id] += amount
+                        
+                elif tx_message.HasField('account'):
+                    src_id = tx_message.account.account_id
+                    amount = tx_message.account.balance
+                    if src_users[src_id] != -1:
+                        print(f"repeated register: {tx}", flush=True)
+                    else:
+                        valid_txns.append(tx)
+                        src_users[src_id] = amount
+
+            for tx in valid_txns:
+                self.save_block(tx)
 
             # Remove all of the new transactions from the buffer
             self.transaction_buffer = [_tx for _tx in self.transaction_buffer if _tx not in new_single_tx]
@@ -271,7 +333,7 @@ class HoneyBadgerBFT():
 
             # print("balances: ", self.balance_cache, flush=True)
             end = datetime.now()
-            print(f"Node {self.pid}: time for round {self.round}: {end - start}. Total transactions: {len(new_single_tx)} ", flush=True)
+            # print(f"Node {self.pid}: time for round {self.round}: {end - start}. Total transactions: {len(new_single_tx)} ", flush=True)
 
             self.round += 1  # Increment the round
             # if self.round >= 3:
