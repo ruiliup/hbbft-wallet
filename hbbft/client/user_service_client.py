@@ -12,14 +12,16 @@ from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
 
 
 class UserServiceClient(object):
-    def __init__(self, ip: str = 'localhost', port: int = 50051, num: int = 100):
+    def __init__(self, ip: str = 'localhost', port: int = 50051, num: int = 100, mode: int = 0):
         self.ip = ip
         self.port = port
         self.num = num
+        self.mode = mode
         self.accts = []
         self.channel = grpc.insecure_channel(f'{self.ip}:{self.port}')
         self.stub = user_service_pb2_grpc.UserServiceStub(self.channel)
-        self.create_accts()
+        if self.mode == 0:
+            self.create_accts()
 
     def close(self):
         self.channel.close()
@@ -27,12 +29,15 @@ class UserServiceClient(object):
     def create_accts(self):
         print(f"###Creating total {self.num} accounts...")
         for _ in range(self.num):
-            name = input("###Enter your name to create a new account: ###")
-            balance = int(
-                input("###Enter the initial balance for this new account (input an integer): ###"))
-            # name = ''.join(choices(ascii_letters, k=4))
+            if self.mode == 0:
+                name = ''.join(choices(ascii_letters, k=4))
+                balance = int(1e9)
+            elif self.mode == 1:
+                name = input("###Enter your name to create a new account: ###")
+                balance = int(input(
+                    "###Enter the initial balance for this new account (input an integer): ###"))
+
             acct_id = randint(1, 1000)
-            # balance = int(1e9)
             print(f'create account: {acct_id} {name} {balance}', flush=True)
             self.accts.append(self.create_account(acct_id, name, balance))
 
@@ -60,11 +65,18 @@ class UserServiceClient(object):
             return None
 
     def update_acct(self):
-        self.accts = self.stub.GetAccount()
+        request = user_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+        response = self.stub.GetAccountsCall(request)
+        for acct in response.accounts:
+            print(acct)
+        # self.accts = accts_list
 
     def pick_acct(self):
         self.update_acct()
-        print(f"This is all the accounts that we have: \n")
+        if self.mode == 0:
+            print(self.accts, type(self.accts))
+            return choice(self.accts)
+        print(f"These are all the accounts that we have: \n")
         for i in range(len(self.accts)):
             print(f"{i}. {self.accts[i]}\n")
         no = input("###Choose one account: ###")
@@ -92,8 +104,11 @@ class UserServiceClient(object):
         """
         todo: check balance for each account once we are able to get balance.
         """
-        pay_amount = int(input(
-            "Input the amount of money that you want to transfer (an integer): "))
+        if self.mode == 0:
+            pay_amount = randint(0, 100)
+        elif self.mode == 1:
+            pay_amount = int(
+                input("Input the amount of money that you want to transfer (an integer): "))
         # Select two users
         response = self.stub.PayToCall(
             user_service_pb2.PayToRequest(

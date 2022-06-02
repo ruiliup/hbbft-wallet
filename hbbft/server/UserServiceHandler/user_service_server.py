@@ -54,8 +54,13 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
             for server_id in range(total_server):
                 block_path = f'{block_path_header}{server_id}'
                 if os.path.exists(block_path):
-                    accts = HoneyBadgerBFT.get_accounts(block_path)
-                    return user_service_pb2.GetAccountsResponse(accounts=accts)
+                    accts = HoneyBadgerBFT.get_accounts(
+                        block_path)  # a list of Accounts
+                    response = user_service_pb2.GetAccountsResponse()
+                    print(response)
+                    for acct in accts:
+                        response.accounts.append(acct)
+                    return response
             time.sleep(5)
             now = datetime.datetime.now()
         print("Blocks not found after 5 min", flush=True)

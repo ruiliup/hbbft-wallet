@@ -21,10 +21,6 @@ message GetBalanceResponse {
   Account account = 1;
 }
 
-// The request message for GetAccountsCall
-message GetAccountsRequest {
-}
-
 // The response message for GetAccountsCall
 message GetAccountsResponse {
   repeated Account accounts = 1;
@@ -59,6 +55,7 @@ message UserTransaction {
 // The UserService definitions
 service UserService {
   rpc GetBalanceCall (GetBalanceRequest) returns (GetBalanceResponse) {}
+  rpc GetAccountsCall (google.protobuf.Empty) returns (GetAccountsResponse) {}
   rpc PayToCall (PayToRequest) returns (PayToResponse) {}
   rpc Register (Account) returns (RegisterResponse) {}
   rpc GetTransactions (google.protobuf.Empty) returns (stream UserTransaction) {}
