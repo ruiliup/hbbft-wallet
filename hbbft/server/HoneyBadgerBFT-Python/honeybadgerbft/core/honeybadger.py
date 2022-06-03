@@ -126,7 +126,7 @@ class HoneyBadgerBFT():
         if os.listdir(self.block_path):
             last_file = sorted(os.listdir(self.block_path))[-1]
             f = open(os.path.join(self.block_path, last_file), 'r')
-            if len(f.readlines()) < self.block_size + 1:  # one line for hash
+            if (len(f.readlines()) < self.block_size + 1):  # one line for hash
                 with open(os.path.join(os.path.join(self.block_path, last_file)), 'a') as wf:
                     # json.dump(tx, wf)
                     wf.write(tx + '\n')
@@ -153,7 +153,7 @@ class HoneyBadgerBFT():
             return
         for file in os.listdir(block_path):
             with open(os.path.join(block_path, file), 'r') as f:
-                # TODO: Check the hash matches previous block file's content
+                #TODO: Check the has matches previous block file's content
                 txns = f.readlines()
                 for tx in txns[1:]:
                     tx_message = Parse(tx, user_service_pb2.UserTransaction())
@@ -177,6 +177,22 @@ class HoneyBadgerBFT():
                     user_name = tx_message.transaction.des_acct.user_name
         print(f'Get balance: {user_name} {balance}', flush=True)
         return user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
+
+    @staticmethod
+    def get_accounts(block_path):
+        all_accts = []
+        print(f'Get all accounts', flush=True)
+        for tx_message in HoneyBadgerBFT.read_block(block_path):
+            print(f"Get all accounts: read from block: {tx_message}", flush=True)
+            if tx_message.HasField('account'):
+                acct_id = tx_message.account.account_id
+                user_name = tx_message.transaction.src_acct.user_name
+                balance = HoneyBadgerBFT.get_balance(block_path, acct_id).balance
+                cur_acct = user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
+                all_accts.append(cur_acct)
+        print(f'Get all accounts finished: {all_accts}', flush=True)
+        return all_accts
+
 
     def run(self):
         """Run the HoneyBadgerBFT protocol."""

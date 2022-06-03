@@ -46,6 +46,26 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
         print("Blocks not found after 5 min", flush=True)
         return None
 
+    def GetAccountsCall(self, request, context):
+        # since each node has same files we pick up node 0 here
+        now = datetime.datetime.now()
+        end = now + datetime.timedelta(minutes=5)
+        while now <= end:
+            for server_id in range(total_server):
+                block_path = f'{block_path_header}{server_id}'
+                if os.path.exists(block_path):
+                    accts = HoneyBadgerBFT.get_accounts(
+                        block_path)  # a list of Accounts
+                    response = user_service_pb2.GetAccountsResponse()
+                    print(response)
+                    for acct in accts:
+                        response.accounts.append(acct)
+                    return response
+            time.sleep(5)
+            now = datetime.datetime.now()
+        print("Blocks not found after 5 min", flush=True)
+        return None
+
     def Register(self, request, context):
         try:
             account = user_service_pb2.Account(
