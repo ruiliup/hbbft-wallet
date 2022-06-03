@@ -1,0 +1,275 @@
+node 0:
+
+Node 0: time for round 60: 0:04:25.373527. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 61: 0:03:46.476697. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 62: 0:02:34.097426. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 63: 0:03:49.271755. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 64: 0:02:55.615219. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 65: 0:03:53.425088. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 66: 0:04:16.962436. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 67: 0:02:12.704136. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 68: 0:05:06.029256. Total transactions: 1200
+tx_to_send number: 100
+Node 0: time for round 69: 0:04:18.369392. Total transactions: 1200
+tx_to_send number: 100
+
+node 1:
+
+Node 1: time for round 60: 0:04:37.792030. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 61: 0:03:39.825540. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 62: 0:01:56.607317. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 63: 0:05:03.801348. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 64: 0:01:49.535952. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 65: 0:04:54.450915. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 66: 0:02:07.310284. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 67: 0:04:50.521505. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 68: 0:03:46.656455. Total transactions: 1200
+tx_to_send number: 100
+Node 1: time for round 69: 0:04:24.526841. Total transactions: 1200
+tx_to_send number: 100
+
+node 2:
+
+Node 2: time for round 60: 0:05:28.987147. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 61: 0:01:20.166190. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 62: 0:05:07.368000. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 63: 0:01:46.417166. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 64: 0:05:39.643377. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 65: 0:00:55.665056. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 66: 0:05:58.898958. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 67: 0:01:00.348685. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 68: 0:06:20.059535. Total transactions: 1200
+tx_to_send number: 100
+Node 2: time for round 69: 0:01:56.809599. Total transactions: 1200
+tx_to_send number: 100
+
+node 3:
+
+Node 3: time for round 60: 0:03:51.075914. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 61: 0:01:55.716352. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 62: 0:04:35.762477. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 63: 0:03:42.180640. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 64: 0:03:05.906382. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 65: 0:02:05.765765. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 66: 0:05:31.851393. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 67: 0:01:27.068841. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 68: 0:05:48.842414. Total transactions: 1200
+tx_to_send number: 100
+Node 3: time for round 69: 0:03:50.300988. Total transactions: 1200
+tx_to_send number: 100
+
+node 4:
+
+Node 4: time for round 60: 0:03:13.513171. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 61: 0:03:07.496456. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 62: 0:03:31.059470. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 63: 0:03:05.587663. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 64: 0:03:33.979898. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 65: 0:02:13.097929. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 66: 0:05:20.020737. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 67: 0:03:18.153273. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 68: 0:03:50.414623. Total transactions: 1200
+tx_to_send number: 100
+Node 4: time for round 69: 0:04:35.455610. Total transactions: 1200
+tx_to_send number: 100
+
+node 5:
+
+Node 5: time for round 60: 0:04:56.194856. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 61: 0:01:52.881977. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 62: 0:04:34.456607. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 63: 0:03:57.713952. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 64: 0:01:46.229819. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 65: 0:04:52.078387. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 66: 0:02:09.759678. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 67: 0:05:06.793022. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 68: 0:02:00.646277. Total transactions: 1200
+tx_to_send number: 100
+Node 5: time for round 69: 0:05:35.735680. Total transactions: 1200
+tx_to_send number: 100
+
+node 6:
+
+Node 6: time for round 60: 0:01:05.802472. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 61: 0:04:59.291859. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 62: 0:03:44.100589. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 63: 0:01:46.521720. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 64: 0:03:54.780360. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 65: 0:04:10.800725. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 66: 0:02:30.372118. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 67: 0:05:03.363981. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 68: 0:01:54.434377. Total transactions: 1200
+tx_to_send number: 100
+Node 6: time for round 69: 0:06:21.222465. Total transactions: 1200
+tx_to_send number: 100
+
+node 7:
+
+Node 7: time for round 60: 0:01:29.841771. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 61: 0:05:19.710766. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 62: 0:01:41.218348. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 63: 0:05:02.846929. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 64: 0:01:50.753623. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 65: 0:04:23.118114. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 66: 0:04:21.739081. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 67: 0:01:25.099910. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 68: 0:06:00.856687. Total transactions: 1200
+tx_to_send number: 100
+Node 7: time for round 69: 0:02:16.023895. Total transactions: 1200
+tx_to_send number: 100
+
+node 8:
+
+Node 8: time for round 60: 0:03:33.537634. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 61: 0:01:44.827424. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 62: 0:04:43.824084. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 63: 0:02:10.028510. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 64: 0:05:00.262217. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 65: 0:01:35.421521. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 66: 0:04:52.963959. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 67: 0:03:30.281564. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 68: 0:04:15.614382. Total transactions: 1200
+tx_to_send number: 100
+Node 8: time for round 69: 0:04:36.995566. Total transactions: 1200
+tx_to_send number: 100
+
+node 9:
+
+Node 9: time for round 60: 0:01:29.925475. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 61: 0:05:14.171025. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 62: 0:01:47.212747. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 63: 0:05:29.295226. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 64: 0:01:23.822901. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 65: 0:05:18.344874. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 66: 0:01:43.684973. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 67: 0:04:59.154780. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 68: 0:02:08.260123. Total transactions: 1200
+tx_to_send number: 100
+Node 9: time for round 69: 0:06:19.394275. Total transactions: 1200
+tx_to_send number: 100
+
+node 10:
+
+Node 10: time for round 60: 0:03:13.486972. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 61: 0:03:12.045710. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 62: 0:03:21.317359. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 63: 0:03:19.728822. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 64: 0:02:35.517548. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 65: 0:04:24.899416. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 66: 0:03:14.181695. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 67: 0:03:33.178259. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 68: 0:04:59.545255. Total transactions: 1200
+tx_to_send number: 100
+Node 10: time for round 69: 0:02:14.927760. Total transactions: 1200
+tx_to_send number: 100
+
+node 11:
+
+Node 11: time for round 60: 0:03:44.698009. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 61: 0:04:03.004796. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 62: 0:01:26.118697. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 63: 0:05:00.526356. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 64: 0:01:52.631220. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 65: 0:04:27.584523. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 66: 0:03:58.318623. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 67: 0:02:37.901025. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 68: 0:05:02.673967. Total transactions: 1200
+tx_to_send number: 100
+Node 11: time for round 69: 0:02:20.513330. Total transactions: 1200
+tx_to_send number: 100

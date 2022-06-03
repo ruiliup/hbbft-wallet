@@ -1,0 +1,90 @@
+node 0:
+
+Node 0: time for round 29: 0:01:30.222272. Total transactions: 600
+tx_to_send number: 300
+Node 0: time for round 30: 0:00:58.539746. Total transactions: 900
+tx_to_send number: 300
+Node 0: time for round 31: 0:00:53.705067. Total transactions: 900
+tx_to_send number: 300
+Node 0: time for round 32: 0:00:47.512679. Total transactions: 900
+tx_to_send number: 300
+Node 0: time for round 33: 0:00:30.693568. Total transactions: 900
+tx_to_send number: 300
+Node 0: time for round 34: 0:00:56.360151. Total transactions: 1200
+tx_to_send number: 300
+Node 0: time for round 35: 0:00:41.286726. Total transactions: 900
+tx_to_send number: 300
+Node 0: time for round 36: 0:00:19.558289. Total transactions: 1200
+tx_to_send number: 300
+Node 0: time for round 37: 0:01:19.170913. Total transactions: 900
+tx_to_send number: 300
+Node 0: time for round 38: 0:01:27.604301. Total transactions: 1200
+tx_to_send number: 300
+
+node 1:
+
+Node 1: time for round 29: 0:02:04.475583. Total transactions: 600
+tx_to_send number: 300
+Node 1: time for round 30: 0:00:48.266959. Total transactions: 900
+tx_to_send number: 300
+Node 1: time for round 31: 0:00:30.476857. Total transactions: 900
+tx_to_send number: 300
+Node 1: time for round 32: 0:00:55.977883. Total transactions: 900
+tx_to_send number: 300
+Node 1: time for round 33: 0:00:33.763376. Total transactions: 900
+tx_to_send number: 300
+Node 1: time for round 34: 0:00:51.529491. Total transactions: 1200
+tx_to_send number: 300
+Node 1: time for round 35: 0:00:42.179873. Total transactions: 900
+tx_to_send number: 300
+Node 1: time for round 36: 0:00:54.412270. Total transactions: 1200
+tx_to_send number: 300
+Node 1: time for round 37: 0:00:37.720865. Total transactions: 900
+tx_to_send number: 300
+Node 1: time for round 38: 0:01:14.527390. Total transactions: 1200
+tx_to_send number: 300
+
+node 2:
+
+Node 2: time for round 29: 0:01:47.094102. Total transactions: 600
+tx_to_send number: 300
+Node 2: time for round 30: 0:00:46.348006. Total transactions: 900
+tx_to_send number: 300
+Node 2: time for round 31: 0:00:03.519364. Total transactions: 900
+tx_to_send number: 300
+Node 2: time for round 32: 0:01:28.711231. Total transactions: 900
+tx_to_send number: 300
+Node 2: time for round 33: 0:00:05.782937. Total transactions: 900
+tx_to_send number: 300
+Node 2: time for round 34: 0:01:40.857931. Total transactions: 1200
+tx_to_send number: 300
+Node 2: time for round 35: 0:00:01.601272. Total transactions: 900
+tx_to_send number: 300
+Node 2: time for round 36: 0:01:34.374711. Total transactions: 1200
+tx_to_send number: 300
+Node 2: time for round 37: 0:00:01.894584. Total transactions: 900
+tx_to_send number: 300
+Node 2: time for round 38: 0:02:00.785256. Total transactions: 1200
+tx_to_send number: 300
+
+node 3:
+Node 3: time for round 29: 0:01:43.414848. Total transactions: 600
+tx_to_send number: 300
+Node 3: time for round 30: 0:00:20.296147. Total transactions: 900
+tx_to_send number: 300
+Node 3: time for round 31: 0:01:25.094064. Total transactions: 900
+tx_to_send number: 300
+Node 3: time for round 32: 0:00:03.114526. Total transactions: 900
+tx_to_send number: 300
+Node 3: time for round 33: 0:01:05.042863. Total transactions: 900
+tx_to_send number: 300
+Node 3: time for round 34: 0:00:07.152430. Total transactions: 1200
+tx_to_send number: 300
+Node 3: time for round 35: 0:01:26.585079. Total transactions: 900
+tx_to_send number: 300
+Node 3: time for round 36: 0:00:40.729565. Total transactions: 1200
+tx_to_send number: 300
+Node 3: time for round 37: 0:01:01.784824. Total transactions: 900
+tx_to_send number: 300
+Node 3: time for round 38: 0:00:07.981409. Total transactions: 1200
+tx_to_send number: 300

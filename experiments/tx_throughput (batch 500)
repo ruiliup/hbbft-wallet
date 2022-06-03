@@ -1,0 +1,91 @@
+node 0:
+
+Node 0: time for round 17: 0:01:37.397076. Total transactions: 1500
+tx_to_send number: 500
+Node 0: time for round 18: 0:00:02.375718. Total transactions: 1500
+tx_to_send number: 500
+Node 0: time for round 19: 0:02:47.597005. Total transactions: 1500
+tx_to_send number: 500
+Node 0: time for round 20: 0:00:09.211553. Total transactions: 2000
+tx_to_send number: 500
+Node 0: time for round 21: 0:02:32.744985. Total transactions: 1500
+tx_to_send number: 500
+Node 0: time for round 22: 0:01:27.441026. Total transactions: 1500
+tx_to_send number: 500
+Node 0: time for round 23: 0:01:41.944603. Total transactions: 1500
+tx_to_send number: 500
+Node 0: time for round 24: 0:00:09.060831. Total transactions: 2000
+tx_to_send number: 500
+Node 0: time for round 25: 0:03:53.294544. Total transactions: 1500
+tx_to_send number: 500
+Node 0: time for round 26: 0:00:23.765933. Total transactions: 2000
+tx_to_send number: 500
+
+node 1:
+
+Node 1: time for round 17: 0:01:35.002167. Total transactions: 1500
+tx_to_send number: 500
+Node 1: time for round 18: 0:00:48.009775. Total transactions: 1500
+tx_to_send number: 500
+Node 1: time for round 19: 0:01:49.651112. Total transactions: 1500
+tx_to_send number: 500
+Node 1: time for round 20: 0:02:20.998425. Total transactions: 2000
+tx_to_send number: 500
+Node 1: time for round 21: 0:01:14.673447. Total transactions: 1500
+tx_to_send number: 500
+Node 1: time for round 22: 0:00:07.641770. Total transactions: 1500
+tx_to_send number: 500
+Node 1: time for round 23: 0:02:41.462101. Total transactions: 1500
+tx_to_send number: 500
+Node 1: time for round 24: 0:02:05.793460. Total transactions: 2000
+tx_to_send number: 500
+Node 1: time for round 25: 0:01:56.275201. Total transactions: 1500
+tx_to_send number: 500
+Node 1: time for round 26: 0:02:01.372081. Total transactions: 2000
+tx_to_send number: 327
+
+node 2:
+
+Node 2: time for round 17: 0:00:01.759670. Total transactions: 1500
+tx_to_send number: 500
+Node 2: time for round 18: 0:02:13.832901. Total transactions: 1500
+tx_to_send number: 500
+Node 2: time for round 19: 0:01:37.740444. Total transactions: 1500
+tx_to_send number: 500
+Node 2: time for round 20: 0:02:22.683774. Total transactions: 2000
+tx_to_send number: 500
+Node 2: time for round 21: 0:00:02.218277. Total transactions: 1500
+tx_to_send number: 500
+Node 2: time for round 22: 0:02:37.498565. Total transactions: 1500
+tx_to_send number: 500
+Node 2: time for round 23: 0:00:02.277415. Total transactions: 1500
+tx_to_send number: 500
+Node 2: time for round 24: 0:03:53.821058. Total transactions: 2000
+tx_to_send number: 500
+Node 2: time for round 25: 0:00:02.486704. Total transactions: 1500
+tx_to_send number: 500
+Node 2: time for round 26: 0:04:02.922744. Total transactions: 2000
+tx_to_send number: 500
+
+node 3:
+
+Node 3: time for round 17: 0:00:42.989910. Total transactions: 1500
+tx_to_send number: 500
+Node 3: time for round 18: 0:00:57.771062. Total transactions: 1500
+tx_to_send number: 500
+Node 3: time for round 19: 0:01:02.716476. Total transactions: 1500
+tx_to_send number: 500
+Node 3: time for round 20: 0:02:49.262698. Total transactions: 2000
+tx_to_send number: 500
+Node 3: time for round 21: 0:01:02.839383. Total transactions: 1500
+tx_to_send number: 500
+Node 3: time for round 22: 0:02:10.217201. Total transactions: 1500
+tx_to_send number: 500
+Node 3: time for round 23: 0:01:05.173788. Total transactions: 1500
+tx_to_send number: 500
+Node 3: time for round 24: 0:02:34.854971. Total transactions: 2000
+tx_to_send number: 500
+Node 3: time for round 25: 0:01:37.070550. Total transactions: 1500
+tx_to_send number: 500
+Node 3: time for round 26: 0:02:10.170591. Total transactions: 2000
+tx_to_send number: 500

@@ -1,0 +1,91 @@
+node 0:
+
+Node 0: time for round 8: 0:00:17.321739. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 9: 0:00:17.772326. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 10: 0:00:11.864822. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 11: 0:00:13.942982. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 12: 0:00:15.535742. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 13: 0:00:15.851409. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 14: 0:00:12.796477. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 15: 0:00:16.336210. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 16: 0:00:14.505982. Total transactions: 240
+tx_to_send number: 60
+Node 0: time for round 17: 0:00:20.066745. Total transactions: 240
+tx_to_send number: 60
+
+node 1:
+
+Node 1: time for round 8: 0:00:17.347353. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 9: 0:00:17.775705. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 10: 0:00:11.925604. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 11: 0:00:13.905466. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 12: 0:00:15.492534. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 13: 0:00:16.753700. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 14: 0:00:11.917263. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 15: 0:00:16.328956. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 16: 0:00:14.521035. Total transactions: 240
+tx_to_send number: 60
+Node 1: time for round 17: 0:00:17.939272. Total transactions: 240
+tx_to_send number: 60
+
+node 2:
+
+Node 2: time for round 8: 0:00:17.352428. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 9: 0:00:17.763205. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 10: 0:00:11.814547. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 11: 0:00:13.991361. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 12: 0:00:16.327442. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 13: 0:00:15.097030. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 14: 0:00:12.727812. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 15: 0:00:16.361945. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 16: 0:00:14.497131. Total transactions: 240
+tx_to_send number: 60
+Node 2: time for round 17: 0:00:19.306941. Total transactions: 240
+tx_to_send number: 60
+
+node 3:
+
+Node 3: time for round 8: 0:00:17.393536. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 9: 0:00:17.743900. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 10: 0:00:16.594520. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 11: 0:00:09.195279. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 12: 0:00:15.498304. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 13: 0:00:15.920369. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 14: 0:00:12.721754. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 15: 0:00:16.399124. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 16: 0:00:18.700647. Total transactions: 240
+tx_to_send number: 60
+Node 3: time for round 17: 0:00:13.550228. Total transactions: 240
+tx_to_send number: 60
