@@ -67,14 +67,15 @@ class UserServiceClient(object):
     def update_acct(self):
         request = user_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
         response = self.stub.GetAccountsCall(request)
+        acct_list = []
         for acct in response.accounts:
-            print(acct)
-        # self.accts = accts_list
+            # print("TEST", acct)
+            acct_list.append(acct)
+        self.accts = acct_list
 
     def pick_acct(self):
         self.update_acct()
         if self.mode == 0:
-            print(self.accts, type(self.accts))
             return choice(self.accts)
         print(f"These are all the accounts that we have: \n")
         for i in range(len(self.accts)):
@@ -94,10 +95,16 @@ class UserServiceClient(object):
     def create_txn(self):
         print("Origin Account")
         from_acct = self.pick_acct()
+        print(f"Chosen origin account: {from_acct}")
         print("Destination Account")
         to_acct = self.pick_acct()
+        print(f"Chosen destination account: {to_acct}")
         while from_acct is to_acct:
+            print(
+                f"Origin Account and Destination account cannot be the same, choose destination account again: ")
             to_acct = self.pick_acct()
+            print(f"Chosen destination account: {to_acct}")
+
         return self._create_txn(from_acct, to_acct)
 
     def _create_txn(self, from_acct, to_acct):
@@ -121,9 +128,16 @@ class UserServiceClient(object):
         from_acct.balance -= pay_amount
         to_acct.balance += pay_amount
         return response.status
-    
+
     def get_balance(self, acct_id):
+        print(f"Get Balance for Account ID: {acct_id}")
         response = self.stub.GetBalanceCall(
             user_service_pb2.GetBalanceRequest(account_id=acct_id)
         )
+        print(f"After getting balance: {response.account.balance}")
         return response.account
+
+    def get_all_balance(self):
+        self.update_acct()
+        for acct in self.accts:
+            self.get_balance(acct.account_id)

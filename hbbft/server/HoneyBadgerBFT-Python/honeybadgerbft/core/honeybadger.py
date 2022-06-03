@@ -187,7 +187,7 @@ class HoneyBadgerBFT():
             if tx_message.HasField('account'):
                 acct_id = tx_message.account.account_id
                 user_name = tx_message.transaction.src_acct.user_name
-                balance = HoneyBadgerBFT.get_balance(block_path, acct_id)
+                balance = HoneyBadgerBFT.get_balance(block_path, acct_id).balance
                 cur_acct = user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
                 all_accts.append(cur_acct)
         print(f'Get all accounts finished: {all_accts}', flush=True)

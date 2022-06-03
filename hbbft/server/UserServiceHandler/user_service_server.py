@@ -46,7 +46,7 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
         print("Blocks not found after 5 min", flush=True)
         return None
 
-    def GetAccountsCall(self):
+    def GetAccountsCall(self, request, context):
         # since each node has same files we pick up node 0 here
         now = datetime.datetime.now()
         end = now + datetime.timedelta(minutes=5)
