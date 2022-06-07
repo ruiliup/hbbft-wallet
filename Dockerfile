@@ -19,8 +19,8 @@ RUN cd pbc-0.5.14 && ./configure && make && make install
 ENV LIBRARY_PATH /usr/local/lib
 ENV LD_LIBRARY_PATH /usr/local/lib
 
-# RUN git clone https://github.com/JHUISI/charm.git
-COPY charm charm
+RUN git clone https://github.com/JHUISI/charm.git
+# COPY charm charm
 RUN cd charm && ./configure.sh && make install
 
 ENV SRC /usr/local/src/hbbft-wallet

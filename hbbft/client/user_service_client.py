@@ -33,9 +33,9 @@ class UserServiceClient(object):
                 name = ''.join(choices(ascii_letters, k=4))
                 balance = int(1e9)
             elif self.mode == 1:
-                name = input("###Enter your name to create a new account: ###")
+                name = input("###Enter your name to create a new account ###: ")
                 balance = int(input(
-                    "###Enter the initial balance for this new account (input an integer): ###"))
+                    "###Enter the initial balance for this new account (input an integer) ###: "))
 
             acct_id = randint(1, 1000)
             print(f'create account: {acct_id} {name} {balance}', flush=True)
@@ -80,7 +80,7 @@ class UserServiceClient(object):
         print(f"These are all the accounts that we have: \n")
         for i in range(len(self.accts)):
             print(f"{i}. {self.accts[i]}\n")
-        no = input("###Choose one account: ###")
+        no = input("###Choose one account ###: ")
         return self.accts[int(no)]
 
     def create_txns(self, num):
@@ -130,11 +130,11 @@ class UserServiceClient(object):
         return response.status
 
     def get_balance(self, acct_id):
-        print(f"Get Balance for Account ID: {acct_id}")
+        # print(f"Get Balance for Account ID: {acct_id}")
         response = self.stub.GetBalanceCall(
             user_service_pb2.GetBalanceRequest(account_id=acct_id)
         )
-        print(f"After getting balance: {response.account.balance}")
+        # print(f"After getting balance: {response.account.balance}")
         return response.account
 
     def get_all_balance(self):

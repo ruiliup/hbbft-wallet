@@ -210,6 +210,7 @@ if __name__ == "__main__":
     f = int(args.f)
     B = int(args.B)
     pid = int(args.pid)
+    server_id = pid
 
     # start a clean folder for blocks
     block_file_path = f'/usr/local/src/hbbft-wallet/test/blocks/block_file_{pid}'

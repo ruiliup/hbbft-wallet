@@ -6,14 +6,14 @@ import os
 from queue import Queue
 from hbbft.common.protos import user_service_pb2, user_service_pb2_grpc
 from honeybadgerbft.core.honeybadger import HoneyBadgerBFT
-from hbbft.common.setting import total_server, block_path_header
+from hbbft.common.setting import total_server, block_path_header, server_id
 
 database = Queue()
 
 
 class UserService(user_service_pb2_grpc.UserServiceServicer):
     def PayToCall(self, request, context):
-        print("PayTo service requested", flush=True)
+        # print("PayTo service requested", flush=True)
         try:
             txn = user_service_pb2.PayToRequest(
                 src_acct=request.src_acct,
@@ -36,11 +36,11 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
         now = datetime.datetime.now()
         end = now + datetime.timedelta(minutes=5)
         while now <= end:
-            for server_id in range(total_server):
-                block_path = f'{block_path_header}{server_id}'
-                if os.path.exists(block_path):
-                    acct = HoneyBadgerBFT.get_balance(block_path, request.account_id)
-                    return user_service_pb2.GetBalanceResponse(account=acct)
+            # for server_id in range(total_server):
+            block_path = f'{block_path_header}{server_id}'
+            if os.path.exists(block_path):
+                acct = HoneyBadgerBFT.get_balance(block_path, request.account_id)
+                return user_service_pb2.GetBalanceResponse(account=acct)
             time.sleep(5)
             now = datetime.datetime.now()
         print("Blocks not found after 5 min", flush=True)
@@ -51,16 +51,20 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
         now = datetime.datetime.now()
         end = now + datetime.timedelta(minutes=5)
         while now <= end:
-            for server_id in range(total_server):
-                block_path = f'{block_path_header}{server_id}'
-                if os.path.exists(block_path):
-                    accts = HoneyBadgerBFT.get_accounts(
-                        block_path)  # a list of Accounts
-                    response = user_service_pb2.GetAccountsResponse()
-                    print(response)
-                    for acct in accts:
-                        response.accounts.append(acct)
-                    return response
+            # for server_id in range(total_server):
+            block_path = f'{block_path_header}{server_id}'
+            # print("block path: ", block_path, flush=True)
+            if os.path.exists(block_path):
+                accts = HoneyBadgerBFT.get_accounts(
+                    block_path)  # a list of Accounts
+                response = user_service_pb2.GetAccountsResponse()
+                print(response)
+                for acct in accts:
+                    response.accounts.append(acct)
+                return response
+            else:
+                response = user_service_pb2.GetAccountsResponse()
+                return response
             time.sleep(5)
             now = datetime.datetime.now()
         print("Blocks not found after 5 min", flush=True)
@@ -76,7 +80,7 @@ class UserService(user_service_pb2_grpc.UserServiceServicer):
             usr_txn = user_service_pb2.UserTransaction()
             usr_txn.account.CopyFrom(account)
             database.put(usr_txn)
-            print(f'register: {usr_txn}', flush=True)
+            # print(f'register: {usr_txn}', flush=True)
 
         except grpc.RpcError as e:
             print(e, flush=True)

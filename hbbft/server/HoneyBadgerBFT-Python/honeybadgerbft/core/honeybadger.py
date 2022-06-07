@@ -103,7 +103,7 @@ class HoneyBadgerBFT():
             request = user_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             txns = stub2.GetTransactions(request)
             for txn in txns:
-                print('Get_tx', txn, flush=True)
+                # print('Get_tx', txn, flush=True)
                 txn_s = MessageToJson(txn, indent=False).replace('\n', '')
                 # print('Changed to txn_s', txn_s, flush=True)
                 self.submit_tx(txn_s)
@@ -120,7 +120,7 @@ class HoneyBadgerBFT():
         self.transaction_buffer.append(tx)
 
     def save_block(self, tx):
-        print(f'save block: {tx}', flush=True)
+        # print(f'save block: {tx}', flush=True)
         if not os.path.exists(self.block_path):
             os.makedirs(self.block_path)
         if os.listdir(self.block_path):
@@ -162,9 +162,9 @@ class HoneyBadgerBFT():
     @staticmethod
     def get_balance(block_path, acct_id: int):
         user_name, balance = '', 0
-        print(f'get balance for {acct_id}', flush=True)
+        # print(f'get balance for {acct_id}', flush=True)
         for tx_message in HoneyBadgerBFT.read_block(block_path):
-            print(f"get balance: read from block: {tx_message}", flush=True)
+            # print(f"get balance: read from block: {tx_message}", flush=True)
             if tx_message.HasField('account') and acct_id == tx_message.account.account_id:
                 balance += tx_message.account.balance
                 user_name = tx_message.account.user_name
@@ -175,22 +175,22 @@ class HoneyBadgerBFT():
                 elif acct_id == tx_message.transaction.des_acct.account_id:
                     balance += tx_message.transaction.amount
                     user_name = tx_message.transaction.des_acct.user_name
-        print(f'Get balance: {user_name} {balance}', flush=True)
+        # print(f'Get balance: {user_name} {balance}', flush=True)
         return user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
 
     @staticmethod
     def get_accounts(block_path):
         all_accts = []
-        print(f'Get all accounts', flush=True)
+        # print(f'Get all accounts', flush=True)
         for tx_message in HoneyBadgerBFT.read_block(block_path):
-            print(f"Get all accounts: read from block: {tx_message}", flush=True)
+            # print(f"Get all accounts: read from block: {tx_message}", flush=True)
             if tx_message.HasField('account'):
                 acct_id = tx_message.account.account_id
-                user_name = tx_message.transaction.src_acct.user_name
+                user_name = tx_message.account.user_name
                 balance = HoneyBadgerBFT.get_balance(block_path, acct_id).balance
                 cur_acct = user_service_pb2.Account(account_id=acct_id, user_name=user_name, balance=balance)
                 all_accts.append(cur_acct)
-        print(f'Get all accounts finished: {all_accts}', flush=True)
+        # print(f'Get all accounts finished: {all_accts}', flush=True)
         return all_accts
 
 
@@ -234,7 +234,7 @@ class HoneyBadgerBFT():
                 tx_to_send = random.sample(self.transaction_buffer, self.B)
             else:
                 tx_to_send = self.transaction_buffer[::]
-            print(f"tx_to_send number: {len(tx_to_send)}")
+            # print(f"tx_to_send number: {len(tx_to_send)}")
             # TODO: Wait a bit if transaction buffer is not full
             self.get_txn(user_service_port)
 
@@ -256,7 +256,7 @@ class HoneyBadgerBFT():
             #         tx = tx_to_send[0]
 
             new_tx = self._run_round(r, tx, send_r, recv_r)
-            print('new_tx:', new_tx, flush=True)
+            print(f'round {self.round}, new_tx: {new_tx}', flush=True)
             
 
             # write transactions to block files
